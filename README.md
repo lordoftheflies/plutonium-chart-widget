@@ -1,4 +1,7 @@
 # plutonium-chart-widget
+
+[![Build Status](https://travis-ci.org/lordoftheflies/plutonium-chart-widget.svg?branch=master)](https://travis-ci.org/lordoftheflies/plutonium-chart-widget)
+
 Visualization widget.
 
 
