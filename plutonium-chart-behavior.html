@@ -1,0 +1,72 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
+<script src="../d3/d3.js"></script>
+
+<script>
+    window.Plutonium = window.Plutonium || {};
+
+    /**
+     * Behavior that highlights stuff.
+     *
+     * @polymerBehavior
+     */
+    Plutonium.ChartBehaviorImpl = {
+        extends: 'div',
+        properties: {
+            url: {
+                type: String,
+                notify: true
+            },
+            data: {
+                type: Array,
+                notify: true
+            },
+            verticalAlign: 'top',
+            horizontalAlign: 'auto',
+            autoFitOnAttach: true
+        },
+        observers: [
+            'drawChart(svg, data)',
+            'refreshChart(g, data.*)'
+        ],
+        listeners: {
+            'iron-resize': '_onResizeSvg'
+        },
+        createElements: function (width, height) {
+            console.log(this.is, 'create elements', 'please override this method');
+        },
+        drawChart: function (svg, data) {
+            console.log(this.is, 'draw chart', 'please override this method');
+        },
+        refreshChart: function (g, data) {
+            console.log(this.is, 'refresh chart', 'please override this method');
+        },
+        ready: function () {
+            console.log(this.is, 'ready');
+        },
+        attached: function () {
+            console.log(this.is, 'attached');
+        },
+        get parent() {
+            if (this.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+                return this.parentNode.host;
+            }
+            return this.parentNode;
+        },
+        _onResizeSvg: function (event, details) {
+            console.log(this.is, 'resize');
+            this.createElements(this.offsetWidth, this.offsetHeight);
+        }
+    };
+
+    /**
+     * Behavior that highlights stuff.
+     *
+     * @polymerBehavior
+     */
+    Plutonium.ChartBehavior = [
+        Polymer.IronResizableBehavior,
+        Plutonium.ChartBehaviorImpl
+    ];
+</script>
