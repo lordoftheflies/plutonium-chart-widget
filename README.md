@@ -1,4 +1,6 @@
-# \<plutonium-chart-widget\>
+# plutonium-chart-widget
+Visualization widget.
+
 
 Visualization widget.
 
