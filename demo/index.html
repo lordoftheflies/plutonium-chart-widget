@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+        <title>plutonium-chart-widget demo</title>
+
+        <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+        <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+        <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+        <link rel="import" href="../plutonium-chart-widget.html">
+        <link rel="import" href="../plutonium-pie-chart.html">
+
+        <style is="custom-style" include="demo-pages-shared-styles">
+        </style>
+    </head>
+    <body>
+        <div class="vertical-section-container centered">
+            <h3>Basic plutonium-chart-widget demo</h3>
+            <demo-snippet>
+                <template>
+<!--                    <plutonium-chart-widget 
+                        url="./data.csv">
+                    </plutonium-chart-widget>-->
+                    <div is="plutonium-pie-chart" 
+                        data='[{ "id": "01", "type": "Restaurant", "amount": 100 }, { "id": "02", "type": "Entertainment", "amount": 100 }, { "id": "03", "type": "Rent", "amount": 200 }, { "id": "04", "type": "Groceries", "amount": 250 }]'>
+                    </div>
+                </template>
+            </demo-snippet>
+        </div>
+    </body>
+</html>

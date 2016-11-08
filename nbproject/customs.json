@@ -1,0 +1,11 @@
+{
+    "elements": {
+        "template": {},
+        "dom-module": {
+            "attributes": {
+                "id": {}
+            }
+        }
+    },
+    "attributes": {}
+}

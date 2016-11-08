@@ -1,0 +1,183 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
+
+<!--
+`plutonium-chart-widget`
+Visualization widget.
+
+@demo demo/index.html 
+-->
+
+<dom-module id="plutonium-chart-widget">
+    <script src="../d3/d3.js"></script>
+
+    <template>
+        <style>
+            :host {
+                display: block;
+                height: 400px;
+            }
+            text {
+                fill: white;
+            }
+            .controls {
+                display: inline-block;
+                margin: 0 0 0 20px;
+            }
+            svg {
+                float: right;
+                margin: 0;
+            }
+            .arc path {
+                stroke: #fff;
+            }
+        </style>
+<!--        <div class="controls">
+            <template is="dom-repeat" items="{{data}}" as="d">
+                <p>A
+                    <label for="input">{{d.type}}: </label>
+                    <input id="input"
+                           type="range"
+                           value="{{d.amount}}"
+                           min="0" max="500" />
+                    <span>[[d.amount]]</span>
+                </p>
+            </template>
+        </div>-->
+        <svg id="svg"></svg>
+    </template>
+
+    <script>
+Polymer({
+    is: 'plutonium-chart-widget',
+    properties: {
+        url: {
+            type: String,
+            notify: true
+        },
+        data: {
+            type: Array,
+            notify: true
+        },
+        verticalAlign: 'top',
+        horizontalAlign: 'auto',
+        autoFitOnAttach: true
+    },
+    behaviors: [
+        Polymer.IronResizableBehavior
+    ],
+    observers: [
+        'urlChanged(url)',
+//        'refreshChart(data.*.amount)'
+    ],
+    listeners: {
+        'iron-resize': '_onResizeSvg'
+    },
+    createElements: function (width, height) {
+        console.debug(this.is, 'create elements');
+        var radius = Math.min(width, height) / 2;
+
+        this.color = d3.scaleOrdinal(["green", "orange", "blue", "red"]);
+
+        this.arc = d3.arc()
+                .outerRadius(radius - 10)
+                .innerRadius(0);
+
+        this.pie = d3.pie()
+                .sort(null)
+                .value(function (d) {
+                    return d.amount;
+                });
+
+        this.svg = d3.select(this.$.svg)
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+    },
+    drawChart: function () {
+        console.debug(this.is, 'draw chart');
+        var me = this;
+        if (this.data) {
+            me.data.forEach(function (d) {
+                d.amount = +d.amount;
+            });
+
+            this.g = this.svg.selectAll(".arc")
+                    .data(me.pie(me.data))
+                    .enter().append("g")
+                    .attr("class", "arc");
+
+            me.g.append("path")
+                    .attr("d", me.arc)
+                    .style("fill", function (d) {
+                        return me.color(d.data.type);
+                    });
+
+            me.g.append("text")
+                    .attr("transform", function (d) {
+                        return "translate(" + me.arc.centroid(d) + ")";
+                    })
+                    .attr("dy", ".35em")
+                    .style("text-anchor", "middle")
+                    .text(function (d) {
+                        return d.data.type;
+                    });
+        }
+    },
+    refreshChart: function () {
+        console.debug(this.is, 'refresh chart');
+        if (this.data) {
+            var me = this;
+
+            this.g.data(this.pie(this.data)).select("path").attr("d", this.arc);
+
+            this.g.select("text").attr("transform", function (d) {
+                return "translate(" + me.arc.centroid(d) + ")";
+            });
+        }
+    },
+    getData: function () {
+        console.debug(this.is, 'get data');
+
+        var me = this;
+        d3.csv(this.url, function (error, data) {
+            me.data = data;
+            me.drawChart();
+        });
+    },
+    ready: function () {
+        console.debug(this.is, 'ready');
+
+//        this.createElements();
+//        this.getData();
+    },
+    attached: function () {
+//        this.getData();
+//        this.drawChart();
+    },
+    urlChanged: function (value) {
+        console.debug(this.is, 'url changed');
+
+        //        if (newValue && oldValue) {
+        this.getData();
+        //        }
+    },
+    
+    get parent() {
+      if (this.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+        return this.parentNode.host;
+      }
+      return this.parentNode;
+    },
+    _onResizeSvg: function (event, details) {
+        this.createElements(this.offsetWidth, this.offsetHeight);
+//        var x = this.x = Math.floor(this.parent.offsetWidth / 3);
+//        var y = this.y = Math.floor(this.parent.offsetHeight / 3);
+//        this.translate3d(x + 'px', y + 'px', 0);
+
+        console.log(this.is, 'resize');
+    }
+});
+    </script>
+</dom-module>
