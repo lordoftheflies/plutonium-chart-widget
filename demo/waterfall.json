@@ -1,0 +1,37 @@
+[
+    {
+        "period": "Four Weeks Ago",
+        "startOfPeriod": 100,
+        "new": 20,
+        "returned": 30,
+        "wentInactive": 40
+    },
+    {
+        "period": "Three Weeks Ago",
+        "startOfPeriod": 110,
+        "new": 30,
+        "returned": 20,
+        "wentInactive": 30
+    },
+    {
+        "period": "Two Weeks Ago",
+        "startOfPeriod": 130,
+        "new": 40,
+        "returned": 25,
+        "wentInactive": 40
+    },
+    {
+        "period": "One Week Ago",
+        "startOfPeriod": 155,
+        "new": 30,
+        "returned": 55,
+        "wentInactive": 50
+    },
+    {
+        "period": "Current Week",
+        "startOfPeriod": 190,
+        "new": 0,
+        "returned": 0,
+        "wentInactive": 0
+    }
+]

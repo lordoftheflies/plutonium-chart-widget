@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+        <title>Plutonium charts demo</title>
+
+        <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+        <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+        <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+        <link rel="import" href="../plutonium-chart-widget.html">
+
+        <style is="custom-style" include="demo-pages-shared-styles">
+        </style>
+    </head>
+    <body>
+        <div class="vertical-section-container centered">
+            <h3>Basic axis demo</h3>
+            <demo-snippet>
+                <template>
+                    <plutonium-datasource source-url="./waterfall.json" source-type="json" last-data="{{waterfallData}}"></plutonium-datasource>
+                    <div is="plutonium-waterfall-chart" data="[[waterfallData]]">
+                        <plutonium-x-axis class="axis"></plutonium-x-axis>
+                        <plutonium-y-axis class="axis"></plutonium-y-axis>
+                    </div>
+                </template>
+            </demo-snippet>
+        </div>
+    </body>
+</html>

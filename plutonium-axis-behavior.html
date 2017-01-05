@@ -1,0 +1,82 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
+
+<script src="../d3/d3.js"></script>
+
+<script>
+    window.Plutonium = window.Plutonium || {};
+
+    /**
+     * Behavior that highlights stuff.
+     *
+     * @polymerBehavior
+     */
+    Plutonium.AxisBehaviorImpl = {
+        properties: {
+            size: {
+                type: Number,
+                value: 0
+            },
+            orientation: {
+                type: String,
+            },
+            _scale: {
+                type: Object
+            },
+            _axis: {
+                type: Object
+            }
+        },
+        behaviors: [
+        ],
+        observers: [
+            '_observeSize(size, orientation, _g)'
+        ],
+        listeners: {
+            'iron-resize': '_onResizeAxis',
+//            'plutonium-draw': '_onDrawAxis'
+        },
+        ready: function () {
+            console.debug(this.is, 'ready');
+            this._g = this.parentNode._svg.append("g").attr("class", "axis");
+        },
+        _onResizeAxis: function () {
+            this.initializeD3(this.size, this.orientation, this._scale);
+            this._scale = this._scale.range([0, this.size]);
+//            this.initializeD3(size, orientation, scale);
+//            this.size = this.resizeOrientationD3(this.parentNode.offsetWidth, this.parentNode.offsetHeight);
+            this._g.call(this._axis);
+            console.log(this.is, 'resized to', this.size);
+        },
+        _observeSize: function (size, orientation, g) {
+            console.debug(this.is, 'change to size to', size, 'px at', orientation);
+//            this.initializeD3(size, orientation);
+            g = this.transformD3(g, size);
+        },
+        draw: function () {
+            console.debug(this.is, 'draw');
+            this._g = this.transformD3(this._g, this.size);
+        },
+        initializeD3: function (size, orientation) {
+            console.warn(this.is, 'initialize D3', 'please override this method');
+        },
+        resizeOrientationD3: function (offsetWidth, offsetHeight) {
+            console.warn(this.is, 'resize orientation D3', 'please override this method');
+        },
+        transformD3: function (g) {
+            console.warn(this.is, 'resize orientation D3', 'please override this method');
+            return g;
+        },
+    };
+
+    /**
+     * Behavior that highlights stuff.
+     *
+     * @polymerBehavior
+     */
+    Plutonium.AxisBehavior = [
+        Polymer.IronResizableBehavior,
+        Plutonium.AxisBehaviorImpl
+    ];
+</script>

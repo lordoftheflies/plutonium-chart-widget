@@ -1,6 +1,7 @@
 <link rel="import" href="../polymer/polymer.html">
 
 <link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
+
 <script src="../d3/d3.js"></script>
 
 <script>
@@ -14,12 +15,32 @@
     Plutonium.ChartBehaviorImpl = {
         extends: 'div',
         properties: {
-            url: {
-                type: String,
+            margin: {
+                type: Object,
+                value: {
+                    top: 20,
+                    right: 20,
+                    bottom: 30,
+                    left: 40
+                }
+            },
+            viewport: {
+                type: Object
+            },
+            _chartWidth: {
+                type: Number,
+                notify: true
+            },
+            _chartHeight: {
+                type: Number,
                 notify: true
             },
             data: {
                 type: Array,
+                notify: true
+            },
+            _svg: {
+                type: Object,
                 notify: true
             },
             verticalAlign: 'top',
@@ -27,26 +48,61 @@
             autoFitOnAttach: true
         },
         observers: [
-            'drawChart(svg, data)',
+            '_computeChartWidth(viewport.width, margin.left, margin.right)',
+            '_computeChartHeight(viewport.height, margin.top, margin.bottom)',
+            '_observeSvg(viewport.width, viewport.height, margin.left, margin.top, _chartWidth, _chartHeight)',
+            '_observeAxises(svg, _chartWidth, _chartHeight)',
+            'drawChart(_svg, data)',
             'refreshChart(g, data.*)'
         ],
         listeners: {
             'iron-resize': '_onResizeSvg'
         },
-        createElements: function (width, height) {
-            console.log(this.is, 'create elements', 'please override this method');
-        },
-        drawChart: function (svg, data) {
-            console.log(this.is, 'draw chart', 'please override this method');
-        },
-        refreshChart: function (g, data) {
-            console.log(this.is, 'refresh chart', 'please override this method');
-        },
         ready: function () {
-            console.log(this.is, 'ready');
+            console.debug(this.is, 'ready');
+            this._svg = d3.select(this.$.svg);
+            this._svg.append('g').attr('class', 'canvas');
+            this._g = this._svg.selectAll('.canvas');
+        },
+        _observeAxises: function (svg, _chartWidth, _chartHeight) {
+            this.$.xAxis.set('size', _chartWidth);
+            this.$.yAxis.set('size', _chartHeight);
+        },
+        _observeSvg: function (width, height, left, top, _chartWidth, _chartHeight) {
+            this._svg = this._svg.attr('width', width).attr('height', height);
+            this._g.attr('width', _chartWidth).attr('height', _chartHeight).attr('transform', 'translate(' + left + ',' + top + ')');
+
+            console.debug(this.is, 'svg canvas updated');
+        },
+        /**
+         * Abstract function to do the particular initialization.
+         * @param {type} svg SVG object
+         * @param {type} data
+         * @returns {undefined}
+         */
+        createElements: function (width, height) {
+            console.warn(this.is, 'create elements', 'please override this method');
+        },
+        /**
+         * Abstract function to do the particular drawing.
+         * @param {type} svg SVG object
+         * @param {type} data
+         * @returns {undefined}
+         */
+        drawChart: function (svg, data) {
+            console.warn(this.is, 'draw chart', 'please override this method');
+        },
+        /**
+         * Abstract function to do the particular update.
+         * @param {type} svg SVG object
+         * @param {type} data
+         * @returns {undefined}
+         */
+        refreshChart: function (g, data) {
+            console.warn(this.is, 'refresh chart', 'please override this method');
         },
         attached: function () {
-            console.log(this.is, 'attached');
+            console.debug(this.is, 'attached');
         },
         get parent() {
             if (this.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
@@ -54,9 +110,32 @@
             }
             return this.parentNode;
         },
+        _computeChartWidth: function (viewportWidth, leftMargin, rightMargin) {
+            if (viewportWidth > 0) {
+                var result = viewportWidth - leftMargin - rightMargin;
+                console.debug(this.is, 'compute chart width', result);
+                this._chartWidth = (result > 0) ? result : 0;
+            } else
+                this._chartWidth = 0;
+        },
+        _computeChartHeight: function (viewportHeight, topMargin, bottomMargin) {
+            if (viewportHeight > 0) {
+                var result = viewportHeight - topMargin - bottomMargin;
+                console.debug(this.is, 'compute chart height', result);
+                this._chartHeight = (result > 0) ? result : 0;
+            } else
+                this._chartHeight = 0;
+
+        },
         _onResizeSvg: function (event, details) {
-            console.log(this.is, 'resize');
-            this.createElements(this.offsetWidth, this.offsetHeight);
+            if (this.offsetWidth > 0 && this.offsetHeight > 0) {
+                this.viewport = {
+                    width: this.offsetWidth,
+                    height: this.offsetHeight
+                };
+                console.log(this.is, 'resized to', this.viewport.width + 'x' + this.viewport.height);
+            }
+
         }
     };
 
