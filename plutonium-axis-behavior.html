@@ -14,6 +14,11 @@
      */
     Plutonium.AxisBehaviorImpl = {
         properties: {
+            timeParse: {
+                type: String,
+                notify: true,
+                value: '%d-%b-%y'
+            },
             size: {
                 type: Number,
                 value: 0
@@ -28,46 +33,40 @@
                 type: Object
             }
         },
-        behaviors: [
-        ],
         observers: [
-            '_observeSize(size, orientation, _g)'
+            '_observeTimeParsePattern(timeParse)'
         ],
         listeners: {
-            'iron-resize': '_onResizeAxis',
-//            'plutonium-draw': '_onDrawAxis'
+            'iron-resize': '_onResize'
+        },
+        created: function () {
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'created');
         },
         ready: function () {
-            console.debug(this.is, 'ready');
-            this._g = this.parentNode._svg.append("g").attr("class", "axis");
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'ready');
         },
-        _onResizeAxis: function () {
-            this.initializeD3(this.size, this.orientation, this._scale);
-            this._scale = this._scale.range([0, this.size]);
-//            this.initializeD3(size, orientation, scale);
-//            this.size = this.resizeOrientationD3(this.parentNode.offsetWidth, this.parentNode.offsetHeight);
-            this._g.call(this._axis);
-            console.log(this.is, 'resized to', this.size);
+        attached: function () {
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'attached');
+
         },
-        _observeSize: function (size, orientation, g) {
-            console.debug(this.is, 'change to size to', size, 'px at', orientation);
-//            this.initializeD3(size, orientation);
-            g = this.transformD3(g, size);
+        detached: function () {
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'detached');
         },
-        draw: function () {
-            console.debug(this.is, 'draw');
-            this._g = this.transformD3(this._g, this.size);
+
+        _onResize: function (event, details) {
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'resize');
+            if (this.timeParse) {
+                this._axis = d3.scaleTime().rangeRound([0, Polymer.dom(this).parentNode._width]);
+            } else {
+                this._axis = d3.scaleLinear().rangeRound([0, Polymer.dom(this).parentNode._width]);
+            }
         },
-        initializeD3: function (size, orientation) {
-            console.warn(this.is, 'initialize D3', 'please override this method');
-        },
-        resizeOrientationD3: function (offsetWidth, offsetHeight) {
-            console.warn(this.is, 'resize orientation D3', 'please override this method');
-        },
-        transformD3: function (g) {
-            console.warn(this.is, 'resize orientation D3', 'please override this method');
-            return g;
-        },
+
+        _observeTimeParsePattern: function (timeParse) {
+            if (timeParse) {
+                this._parseTime = d3.timeParse(timeParse);
+            }
+        }
     };
 
     /**
