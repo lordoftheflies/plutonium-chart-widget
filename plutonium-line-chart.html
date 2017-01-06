@@ -74,6 +74,31 @@ Visualization widget.
                 }).y(function (d) {
                     return self._y(d.close);
                 });
+
+//                if (!this._axisX) {
+                    this._axisX = this._g.append("g")
+                            .attr("class", "axis axis--x")
+                            .attr("transform", "translate(0," + this._height + ")");
+//                }
+
+//                if (!this._axisY) {
+                    this._axisY = this._g.append("g")
+                            .attr("class", "axis axis--y");
+                    this._axisY.append("text")
+                            .attr("fill", "#000")
+                            .attr("transform", "rotate(-90)")
+                            .attr("y", 6)
+                            .attr("dy", "0.71em")
+                            .style("text-anchor", "end")
+                            .text("Price ($)");
+//                }
+
+//                if (!this._graph) {
+                    this._graph = this._g.append("path")
+                            .attr("class", "line")
+                            .attr("stroke", "black")
+                            .attr("fill", "transparent");
+//                }
             },
             draw: function () {
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');
@@ -85,32 +110,13 @@ Visualization widget.
                     return d.close;
                 }));
 
-                if (!this._axisX) {
-                    this._axisX = this._g.append("g")
-                            .attr("class", "axis axis--x")
-                            .attr("transform", "translate(0," + this._height + ")");
-                }
+
                 this._axisX.call(d3.axisBottom(this._x));
 
-                if (!this._axisY) {
-                    this._axisY = this._g.append("g")
-                            .attr("class", "axis axis--y");
-                    this._axisY.append("text")
-                            .attr("fill", "#000")
-                            .attr("transform", "rotate(-90)")
-                            .attr("y", 6)
-                            .attr("dy", "0.71em")
-                            .style("text-anchor", "end")
-                            .text("Price ($)");
-                }
+
                 this._axisY.call(d3.axisLeft(this._y));
 
-                if (!this._graph) {
-                    this._graph = this._g.append("path")
-                            .attr("class", "line")
-                            .attr("stroke", "black")
-                            .attr("fill", "transparent");
-                }
+
                 this._graph.datum(this.data).attr("d", this._chart);
 
             }
