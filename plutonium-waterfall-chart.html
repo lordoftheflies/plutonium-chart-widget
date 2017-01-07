@@ -3,16 +3,13 @@
 <link rel="import" href="plutonium-chart-behavior.html">
 
 <!--
-`plutonium-waterfall-chart`
-
-Waterfall visualization chart.
+`plutonium-line-chart`
+Visualization widget.
 
 @demo demo/index-waterfall-chart.html 
 -->
 
 <dom-module id="plutonium-waterfall-chart">
-    <script src="../d3/d3.js"></script>
-
     <template>
         <style>
             :host {
@@ -30,10 +27,17 @@ Waterfall visualization chart.
                 float: right;
                 margin: 0;
             }
-            .arc path {
-                stroke: #fff;
+            .axis--x path {
+                display: none;
+            }
+
+            .line {
+                fill: none;
+                stroke: steelblue;
+                stroke-width: 1.5px;
             }
         </style>
+        <content select="plutonium-axis"></content>
         <!--        <div class="controls">
                     <template is="dom-repeat" items="{{data}}" as="d">
                         <p>A
@@ -47,9 +51,6 @@ Waterfall visualization chart.
                     </template>
                 </div>-->
         <svg id="svg"></svg>
-        <!--<content></content>-->
-        <content id="xAxis" select="plutonium-x-axis"></content>
-        <content id="yAxis" select="plutonium-y-axis"></content>
     </template>
 
     <script>
@@ -57,113 +58,73 @@ Waterfall visualization chart.
             is: 'plutonium-waterfall-chart',
             extends: 'div',
             properties: {
+                _resolution: {
+                    type: Object,
+                    notify: true,
+                    value: {
+                        width: 60,
+                        height: 50
+                    }
+                },
+                _cellSizeX: {
+                    type: Number,
+                    computed: '_computeCellSizeX(_resolution, _height)'
+                },
+                _cellSizeY: {
+                    type: Number,
+                    computed: '_computeCellSizeY(_resolution, _width)'
+                }
             },
             behaviors: [
                 Plutonium.ChartBehavior
             ],
-            createElements: function (width, height) {
-                console.debug(this.is, 'create elements');
-                var radius = Math.min(width, height) / 2;
+            observers: [
+                '_observeWaterfall(_cellSizeX, _cellSizeY, _g, data)'
+            ],
 
-                this.color = d3.scaleOrdinal(["green", "orange", "blue", "red"]);
+            _computeCellSizeX: function (resolution, height) {
+                return height / resolution.height;
+            },
+            _computeCellSizeY: function (resolution, width) {
+                return width / resolution.width;
+            },
 
-                this.arc = d3.arc()
-                        .outerRadius(radius - 10)
-                        .innerRadius(0);
+            _observeWaterfall: function (_cellSizeX, _cellSizeY, _g, data) {
+                console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe-data');
 
-                this.pie = d3.pie()
-                        .sort(null)
-                        .value(function (d) {
-                            return d.amount;
+                this.fire('d3-render', {});
+
+
+
+
+            },
+            draw: function () {
+                console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');
+
+                var zScale = d3.scaleQuantile().domain([-10, 0, 10]).range(this.data.domains.z);
+                var self = this;
+
+                this._graph = this._g.append('g').attr('class', 'mapg').selectAll('.cellg')
+                        .data(this.data.data, function (d) {
+                            return d.x + ":" + d.y;
+                        })
+                        .enter()
+                        .append("rect")
+                        .attr("x", function (d) {
+                            return d.x * self._cellSizeX;
+                        })
+                        .attr("y", function (d) {
+                            return d.y * self._cellSizeY;
+                        })
+                        .attr("class", function (d) {
+                            return "cell cell-border cr" + (d.x - 1) + " cc" + (d.y - 1);
+                        })
+                        .attr("width", self._cellSizeX).attr("height", self._cellSizeY)
+                        .style("fill", function (d) {
+                            return zScale(d.z).name;
                         });
-
-                this.svg = d3.select(this.$.svg)
-                        .attr("width", width)
-                        .attr("height", height)
-                        .append("g")
-                        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
             },
-            drawChart: function (svg, data) {
-                console.debug(this.is, 'draw chart');
-//                var categories = d3.keys(data).filter(function (key) {
-//                    return key !== "period";
-//                });
-//                console.debug(this.is, 'categories', categories);
-//
-//                data.forEach(function (d) {
-//                    //first calculate the starting height for each category
-//                    var total = 0;
-//                    totals = {};
-//                    for (var i = 0; i < categories.length; i++) {
-//                        if (i == 3) {
-//                            total = total - +d[categories[i]];
-//                            totals[categories[i]] = total;
-//                        } else {
-//                            totals[categories[i]] = total;
-//                            total += +d[categories[i]];
-//                        }
-//                    }
-//                    //then map category name, value, and starting height to each observation
-//                    d.formatted = categories.map(function (category) {
-//                        return {
-//                            name: category,
-//                            value: +d[category],
-//                            baseHeight: +totals[category]
-//                        };
-//                    });
-//                });
 
-                var me = this;
-                if (data) {
-                    me.data.forEach(function (d) {
-                        d.amount = +d.amount;
-                    });
-
-                    if (this.g)
-                        this.g.remove();
-
-                    this.g = this.svg.selectAll(".arc")
-                            .data(me.pie(me.data))
-                            .enter().append("g")
-                            .attr("class", "arc");
-
-                    me.g.append("path")
-                            .attr("d", me.arc)
-                            .style("fill", function (d) {
-                                return me.color(d.data.type);
-                            });
-
-                    me.g.append("text")
-                            .attr("transform", function (d) {
-                                return "translate(" + me.arc.centroid(d) + ")";
-                            })
-                            .attr("dy", ".35em")
-                            .style("text-anchor", "middle")
-                            .text(function (d) {
-                                return d.data.type;
-                            });
-                }
-            },
-            refreshChart: function (g, data) {
-                console.debug(this.is, 'refresh chart');
-
-//                if (!this.data) {
-//                    this.getData();
-//                }
-                //                if (!this.g) {
-                //                    this.drawChart();
-                //                }
-                //
-                //                if (this.data) {
-                //                    var me = this;
-                //
-                //                    this.g.data(this.pie(this.data)).select("path").attr("d", this.arc);
-                //
-                //                    this.g.select("text").attr("transform", function (d) {
-                //                        return "translate(" + me.arc.centroid(d) + ")";
-                //                    });
-                //                }
-            }
         });
     </script>
 </dom-module>

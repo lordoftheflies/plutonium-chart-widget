@@ -6,7 +6,6 @@
 
 <script>
     window.Plutonium = window.Plutonium || {};
-
     /**
      * Behavior that highlights stuff.
      *
@@ -15,31 +14,29 @@
     Plutonium.ChartBehaviorImpl = {
         extends: 'div',
         properties: {
-            margin: {
+            _viewport: {
                 type: Object,
+                notify: true
+            },
+            _margin: {
+                type: Object,
+                notify: true,
                 value: {
                     top: 20,
                     right: 20,
                     bottom: 30,
-                    left: 40
+                    left: 50
                 }
             },
-            viewport: {
-                type: Object
-            },
-            _chartWidth: {
+            _width: {
                 type: Number,
-                notify: true
+                computed: '_computeContentWidth(_viewport.width, _margin.left, _margin.right)'
             },
-            _chartHeight: {
+            _height: {
                 type: Number,
-                notify: true
+                computed: '_computeContentHeight(_viewport.height, _margin.top, _margin.bottom)'
             },
             data: {
-                type: Array,
-                notify: true
-            },
-            _svg: {
                 type: Object,
                 notify: true
             },
@@ -48,97 +45,74 @@
             autoFitOnAttach: true
         },
         observers: [
-            '_computeChartWidth(viewport.width, margin.left, margin.right)',
-            '_computeChartHeight(viewport.height, margin.top, margin.bottom)',
-            '_observeSvg(viewport.width, viewport.height, margin.left, margin.top, _chartWidth, _chartHeight)',
-            '_observeAxises(svg, _chartWidth, _chartHeight)',
-            'drawChart(_svg, data)',
-            'refreshChart(g, data.*)'
+            '_observeLayout(_viewport, _margin)',
+//            '_observeData(_g, data)'
         ],
         listeners: {
-            'iron-resize': '_onResizeSvg'
+            'iron-resize': '_onResizeSvg',
+            'd3-render': '_onRender'
+        },
+        created: function () {
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'created');
+
         },
         ready: function () {
-            console.debug(this.is, 'ready');
             this._svg = d3.select(this.$.svg);
-            this._svg.append('g').attr('class', 'canvas');
-            this._g = this._svg.selectAll('.canvas');
-        },
-        _observeAxises: function (svg, _chartWidth, _chartHeight) {
-            this.$.xAxis.set('size', _chartWidth);
-            this.$.yAxis.set('size', _chartHeight);
-        },
-        _observeSvg: function (width, height, left, top, _chartWidth, _chartHeight) {
-            this._svg = this._svg.attr('width', width).attr('height', height);
-            this._g.attr('width', _chartWidth).attr('height', _chartHeight).attr('transform', 'translate(' + left + ',' + top + ')');
-
-            console.debug(this.is, 'svg canvas updated');
-        },
-        /**
-         * Abstract function to do the particular initialization.
-         * @param {type} svg SVG object
-         * @param {type} data
-         * @returns {undefined}
-         */
-        createElements: function (width, height) {
-            console.warn(this.is, 'create elements', 'please override this method');
-        },
-        /**
-         * Abstract function to do the particular drawing.
-         * @param {type} svg SVG object
-         * @param {type} data
-         * @returns {undefined}
-         */
-        drawChart: function (svg, data) {
-            console.warn(this.is, 'draw chart', 'please override this method');
-        },
-        /**
-         * Abstract function to do the particular update.
-         * @param {type} svg SVG object
-         * @param {type} data
-         * @returns {undefined}
-         */
-        refreshChart: function (g, data) {
-            console.warn(this.is, 'refresh chart', 'please override this method');
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'ready');
         },
         attached: function () {
-            console.debug(this.is, 'attached');
-        },
-        get parent() {
-            if (this.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
-                return this.parentNode.host;
-            }
-            return this.parentNode;
-        },
-        _computeChartWidth: function (viewportWidth, leftMargin, rightMargin) {
-            if (viewportWidth > 0) {
-                var result = viewportWidth - leftMargin - rightMargin;
-                console.debug(this.is, 'compute chart width', result);
-                this._chartWidth = (result > 0) ? result : 0;
-            } else
-                this._chartWidth = 0;
-        },
-        _computeChartHeight: function (viewportHeight, topMargin, bottomMargin) {
-            if (viewportHeight > 0) {
-                var result = viewportHeight - topMargin - bottomMargin;
-                console.debug(this.is, 'compute chart height', result);
-                this._chartHeight = (result > 0) ? result : 0;
-            } else
-                this._chartHeight = 0;
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'attached');
 
+        },
+        detached: function () {
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'detached');
         },
         _onResizeSvg: function (event, details) {
             if (this.offsetWidth > 0 && this.offsetHeight > 0) {
-                this.viewport = {
+                this._viewport = {
                     width: this.offsetWidth,
                     height: this.offsetHeight
                 };
-                console.log(this.is, 'resized to', this.viewport.width + 'x' + this.viewport.height);
+                console.log((this.id ? this.is + '#' + this.id : this.is), 'resized to', this._viewport);
             }
+        },
+        _observeLayout: function (viewport, margin) {
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe-lyout', viewport, margin);
+            this._svg = this._svg.attr('width', this._viewport.width).attr('height', this._viewport.height);
+            if (this._g)
+                this._g.remove();
+            this._g = this._svg.append("g").attr("transform", "translate(" + this._margin.left + "," + this._margin.top + ")");
+        },
+//        _observeData: function (g, data) {
+////            if (Object.is(data)) {
+//            console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe-data', data);
+////            this.initialize();
+////            }
+//        },
 
+        _computeContentWidth: function (viewportWidth, marginLeft, marginRight) {
+            return viewportWidth - marginLeft - marginRight;
+        },
+        _computeContentHeight: function (viewportHeight, marginTop, marginBottom) {
+            return viewportHeight - marginTop - marginBottom;
+        },
+
+//        _observeInit: function (chart, x, y) {
+//            if (!this._chart)
+//            this.initialize();
+//            this.fire('d3-render', {});
+//        },
+        _onRender: function (chart, x, y) {
+            this.draw();
+        },
+
+        initialize: function () {
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'initialize');
+        },
+        draw: function () {
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');
         }
     };
-
     /**
      * Behavior that highlights stuff.
      *

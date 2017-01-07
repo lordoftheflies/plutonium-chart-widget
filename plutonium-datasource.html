@@ -60,7 +60,7 @@ Visualization widget.
 
                 switch (sourceType) {
                     case 'csv':
-                        d3.csv(url, callback);
+                        d3.csv(url, timeSeriesParser, callback);
                         break;
                     case 'tsv':
                         d3.tsv(url, timeSeriesParser, callback);

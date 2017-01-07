@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-        <title>plutonium-waterfall-chart demo</title>
+        <title>plutonium-line-chart demo</title>
 
         <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
@@ -17,11 +17,14 @@
     </head>
     <body>
         <div class="vertical-section-container centered">
-            <h3>Basic plutonium-waterfall-chart demo</h3>
+            <h3>Basic plutonium-line-chart demo</h3>
             <demo-snippet>
-                <template>
-                    <plutonium-datasource source-url="./spectral-data-0.csv" source-type="csv" last-data="{{data0}}"></plutonium-datasource>
-                    <div is="plutonium-line-chart" data="[[data0]]"></div>
+                <template is="dom-bind">
+                    <plutonium-datasource source-url="./spectral-data-0.tsv" source-type="tsv" last-data="{{data0}}"></plutonium-datasource>
+                    <div id="chart0" is="plutonium-line-chart" data="[[data0]]">
+                        <plutonium-axis id="x"></plutonium-axis>
+                        <plutonium-axis id="y"></plutonium-axis>
+                    </div>
                 </template>
             </demo-snippet>
         </div>

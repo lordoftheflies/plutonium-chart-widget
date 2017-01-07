@@ -19,7 +19,7 @@
         <div class="vertical-section-container centered">
             <h3>Basic plutonium-waterfall-chart demo</h3>
             <demo-snippet>
-                <template>
+                <template is="dom-bind">
                     <plutonium-datasource source-url="./waterfall.json" source-type="json" last-data="{{waterfallData}}"></plutonium-datasource>
                     <div is="plutonium-waterfall-chart" data="[[waterfallData]]"></div>
                 </template>
