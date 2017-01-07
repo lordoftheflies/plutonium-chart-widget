@@ -62,8 +62,53 @@ Visualization widget.
             behaviors: [
                 Plutonium.ChartBehavior
             ],
-            initialize: function () {
-                console.debug((this.id ? this.is + '#' + this.id : this.is), 'initialize');
+            observers: [
+                '_observeLine(_g, data)'
+            ],
+            _observeLine: function (g, data) {
+                this.fire('d3-render', {});
+            },
+//            initialize: function () {
+//                console.debug((this.id ? this.is + '#' + this.id : this.is), 'initialize');
+//                var parseTime = d3.timeParse("%d-%b-%y");
+//
+//                var self = this;
+//                this._x = d3.scaleTime().rangeRound([0, self._width]);
+//                this._y = d3.scaleLinear().rangeRound([self._height, 0]);
+//                this._chart = d3.line().x(function (d) {
+//                    return self._x(d.date);
+//                }).y(function (d) {
+//                    return self._y(d.close);
+//                });
+//
+////                if (!this._axisX) {
+//                    this._axisX = this._g.append("g")
+//                            .attr("class", "axis axis--x")
+//                            .attr("transform", "translate(0," + this._height + ")");
+////                }
+//
+////                if (!this._axisY) {
+//                    this._axisY = this._g.append("g")
+//                            .attr("class", "axis axis--y");
+//                    this._axisY.append("text")
+//                            .attr("fill", "#000")
+//                            .attr("transform", "rotate(-90)")
+//                            .attr("y", 6)
+//                            .attr("dy", "0.71em")
+//                            .style("text-anchor", "end")
+//                            .text("Price ($)");
+////                }
+//
+////                if (!this._graph) {
+//                    this._graph = this._g.append("path")
+//                            .attr("class", "line")
+//                            .attr("stroke", "black")
+//                            .attr("fill", "transparent");
+////                }
+//            },
+            draw: function () {
+                console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');
+
                 var parseTime = d3.timeParse("%d-%b-%y");
 
                 var self = this;
@@ -76,32 +121,28 @@ Visualization widget.
                 });
 
 //                if (!this._axisX) {
-                    this._axisX = this._g.append("g")
-                            .attr("class", "axis axis--x")
-                            .attr("transform", "translate(0," + this._height + ")");
+                this._axisX = this._g.append("g")
+                        .attr("class", "axis axis--x")
+                        .attr("transform", "translate(0," + this._height + ")");
 //                }
 
 //                if (!this._axisY) {
-                    this._axisY = this._g.append("g")
-                            .attr("class", "axis axis--y");
-                    this._axisY.append("text")
-                            .attr("fill", "#000")
-                            .attr("transform", "rotate(-90)")
-                            .attr("y", 6)
-                            .attr("dy", "0.71em")
-                            .style("text-anchor", "end")
-                            .text("Price ($)");
+                this._axisY = this._g.append("g")
+                        .attr("class", "axis axis--y");
+                this._axisY.append("text")
+                        .attr("fill", "#000")
+                        .attr("transform", "rotate(-90)")
+                        .attr("y", 6)
+                        .attr("dy", "0.71em")
+                        .style("text-anchor", "end")
+                        .text("Price ($)");
 //                }
 
 //                if (!this._graph) {
-                    this._graph = this._g.append("path")
-                            .attr("class", "line")
-                            .attr("stroke", "black")
-                            .attr("fill", "transparent");
-//                }
-            },
-            draw: function () {
-                console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');
+                this._graph = this._g.append("path")
+                        .attr("class", "line")
+                        .attr("stroke", "black")
+                        .attr("fill", "transparent");
 
                 this._x.domain(d3.extent(this.data, function (d) {
                     return d.date;
