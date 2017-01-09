@@ -165,7 +165,7 @@ Visualization widget.
                         });
             },
             update: function(row) {
-                var newData = this.data.slice(1, this.data.length - 2);
+                var newData = (this.data && this.data.length > 2) ? this.data.slice(1, this.data.length - 2) : [];
                 newData.push(row);
                 this.data = newData;
                 
