@@ -165,12 +165,14 @@ Visualization widget.
                         });
             },
             update: function (data) {
-                this.data.data.forEach(function (item, index, arr) {
-                    if (item.x === 0) {
-                        arr.splice(index, 1);
-                    }
-                }, this);
-                this.data = Object.assign(data, this.data);
+                if (this.data) {
+                    this.data.data.forEach(function (item, index, arr) {
+                        if (item.x === 0) {
+                            arr.splice(index, 1);
+                        }
+                    }, this);
+                }
+                this.data = Object.assign(this.data, data);
 
 
                 this.fire('d3-render', {});
