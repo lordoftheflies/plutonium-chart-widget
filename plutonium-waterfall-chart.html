@@ -123,6 +123,46 @@ Visualization widget.
                         .style("fill", function (d) {
                             return zScale(d.z).name;
                         });
+
+
+                // TODO: separate component
+                this._xAxis = this._g.append("g")
+                        .selectAll(".rowLabelg")
+                        .data(this.data.domains.x)
+                        .enter()
+                        .append("text")
+                        .attr("font-size", (self._cellSizeX - 1) + "px")
+                        .text(function (d) {
+                            return d.name;
+                        })
+                        .attr("x", 0)
+                        .attr("y", function (d, i) {
+                            return self._cellSizeY * i;
+                        })
+                        .style("text-anchor", "end")
+                        .attr("transform", "translate(-6," + self._cellSizeX / 1.5 + ")")
+                        .attr("class", function (d, i) {
+                            return "rowLabel mono r" + i;
+                        });
+
+                this._yAxis = this._g.append("g")
+                        .selectAll(".colLabelg")
+                        .data(this.data.domains.y)
+                        .enter()
+                        .append("text")
+                        .attr("font-size", (self._cellSizeX - 1) + "px")
+                        .text(function (d) {
+                            return d.name;
+                        })
+                        .attr("x", 0)
+                        .attr("y", function (d, i) {
+                            return self._cellSizeX * i;
+                        })
+                        .style("text-anchor", "left")
+                        .attr("transform", "translate(" + self._cellSizeY / 2 + ",-6) rotate (-90)")
+                        .attr("class", function (d, i) {
+                            return "colLabel mono c" + i;
+                        });
             },
 
         });
