@@ -164,7 +164,13 @@ Visualization widget.
                             return "colLabel mono c" + i;
                         });
             },
-
+            update: function(row) {
+                var newData = this.data.slice(1, this.data.length - 2);
+                newData.push(row);
+                this.data = newData;
+                
+                this.fire('d3-render', {});
+            }
         });
     </script>
 </dom-module>
