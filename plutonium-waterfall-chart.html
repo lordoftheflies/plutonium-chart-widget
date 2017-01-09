@@ -110,11 +110,11 @@ Visualization widget.
                         })
                         .enter()
                         .append("rect")
-                        .attr("x", function (d) {
-                            return d.x * self._cellSizeX;
-                        })
                         .attr("y", function (d) {
-                            return d.y * self._cellSizeY;
+                            return d.x * self._cellSizeY;
+                        })
+                        .attr("x", function (d) {
+                            return d.y * self._cellSizeX;
                         })
                         .attr("class", function (d) {
                             return "cell cell-border cr" + (d.x - 1) + " cc" + (d.y - 1);
@@ -131,7 +131,7 @@ Visualization widget.
                         .data(this.data.domains.x)
                         .enter()
                         .append("text")
-                        .attr("font-size", (self._cellSizeX - 1) + "px")
+                        .attr("font-size", (self._cellSizeY - 1) + "px")
                         .text(function (d) {
                             return d.name;
                         })
@@ -159,18 +159,33 @@ Visualization widget.
                             return self._cellSizeX * i;
                         })
                         .style("text-anchor", "left")
-                        .attr("transform", "translate(" + self._cellSizeY / 2 + ",-6) rotate (-90)")
+                        .attr("transform", "translate(" + self._cellSizeY + ",-6) rotate (-90)")
                         .attr("class", function (d, i) {
                             return "colLabel mono c" + i;
                         });
             },
             update: function (data) {
                 if (this.data) {
-                    this.data.data.forEach(function (item, index, arr) {
-                        if (item.x === 0) {
-                            arr.splice(index, 1);
+                    if (this._g) {
+                        this._g.remove();
+                    }
+                    this._g = this._svg.append("g").attr("transform", "translate(" + this._margin.left + "," + this._margin.top + ")");
+
+                    if (data.deltaRows) {
+                        this.data.data.forEach(function (item, index, arr) {
+                            if (item.x < data.deltaRows) {
+                                arr.splice(index, 1);
+                            } else {
+                                item.x = item.x - data.deltaRows;
+                            }
+                        }, this);
+
+                        if (data.data) {
+                            data.data.forEach(function (item, index, arr) {
+                                item.x = item.x + data.deltaRows;
+                            }, this);
                         }
-                    }, this);
+                    }
                     this.data = Object.assign(this.data, data);
                 } else {
                     this.data = data;
