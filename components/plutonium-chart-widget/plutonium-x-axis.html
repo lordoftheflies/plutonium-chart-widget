@@ -1,0 +1,65 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="plutonium-axis-behavior.html">
+
+<!--
+`plutonium-x-axis`
+
+Waterfall visualization chart.
+
+@demo demo/index-axis.html 
+-->
+
+<dom-module id="plutonium-x-axis">
+    <script src="../d3/d3.js"></script>
+
+    <template>
+        <style>
+            :host {
+                font: 10px sans-serif;
+            }
+
+            .axis path,
+            .axis line {
+                fill: none;
+                stroke: #000;
+                shape-rendering: crispEdges;
+            }
+        </style>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'plutonium-x-axis',
+            behaviors: [
+                Plutonium.AxisBehavior
+            ],
+            properties: {
+                orientation: {
+                    value: 'left'
+                }
+            },
+            initializeD3: function (size, orientation) {
+                this._scale = d3.scaleOrdinal(); //.padding(0.1);
+                switch (orientation) {
+                    case 'left':
+                        this._axis = d3.axisLeft(this._scale);
+                        break;
+                    case 'right':
+                        this._axis = d3.axisRight(this._scale);
+                        break;
+                    default:
+                        console.error(this.is, 'orientation value is invalid:', orientation);
+                        break;
+                }
+            },
+            resizeOrientationD3: function (offsetWidth, offsetHeight) {
+                return offsetWidth;
+            },
+            transformD3: function (g, size) {
+//                return g.attr("transform", "translate(0," + this.parentNode._chartHeight + ")");
+                return g;
+            }
+
+        });
+    </script>
+</dom-module>

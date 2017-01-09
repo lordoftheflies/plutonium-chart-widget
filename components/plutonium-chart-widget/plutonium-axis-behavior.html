@@ -1,0 +1,81 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
+
+<script src="../d3/d3.js"></script>
+
+<script>
+    window.Plutonium = window.Plutonium || {};
+
+    /**
+     * Behavior that highlights stuff.
+     *
+     * @polymerBehavior
+     */
+    Plutonium.AxisBehaviorImpl = {
+        properties: {
+            timeParse: {
+                type: String,
+                notify: true,
+                value: '%d-%b-%y'
+            },
+            size: {
+                type: Number,
+                value: 0
+            },
+            orientation: {
+                type: String,
+            },
+            _scale: {
+                type: Object
+            },
+            _axis: {
+                type: Object
+            }
+        },
+        observers: [
+            '_observeTimeParsePattern(timeParse)'
+        ],
+        listeners: {
+            'iron-resize': '_onResize'
+        },
+        created: function () {
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'created');
+        },
+        ready: function () {
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'ready');
+        },
+        attached: function () {
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'attached');
+
+        },
+        detached: function () {
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'detached');
+        },
+
+        _onResize: function (event, details) {
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'resize');
+            if (this.timeParse) {
+                this._axis = d3.scaleTime().rangeRound([0, Polymer.dom(this).parentNode._width]);
+            } else {
+                this._axis = d3.scaleLinear().rangeRound([0, Polymer.dom(this).parentNode._width]);
+            }
+        },
+
+        _observeTimeParsePattern: function (timeParse) {
+            if (timeParse) {
+                this._parseTime = d3.timeParse(timeParse);
+            }
+        }
+    };
+
+    /**
+     * Behavior that highlights stuff.
+     *
+     * @polymerBehavior
+     */
+    Plutonium.AxisBehavior = [
+        Polymer.IronResizableBehavior,
+        Plutonium.AxisBehaviorImpl
+    ];
+</script>

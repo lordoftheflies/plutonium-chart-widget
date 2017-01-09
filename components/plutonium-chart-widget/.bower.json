@@ -1,0 +1,28 @@
+{
+  "name": "plutonium-chart-widget",
+  "description": "Visualization widget.",
+  "main": "plutonium-chart-widget.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0",
+    "d3": "^4.3.0",
+    "iron-fit-behavior": "polymerelements/iron-fit-behavior#^1.2.5",
+    "iron-resizable-behavior": "polymerelements/iron-resizable-behavior#^1.0.5"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  },
+  "homepage": "https://github.com/lordoftheflies/plutonium-chart-widget",
+  "_release": "7d418a9a21",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "7d418a9a21c3ef784a8130d778b0ec18034519b0"
+  },
+  "_source": "https://github.com/lordoftheflies/plutonium-chart-widget.git",
+  "_target": "master",
+  "_originalSource": "lordoftheflies/plutonium-chart-widget",
+  "_direct": true
+}
