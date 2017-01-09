@@ -188,8 +188,11 @@ Visualization widget.
 //                            data.data.forEach(function (item, index, arr) {
 //                                item.x = item.x - data.deltaRows;
 //                            }, this);
+                            delete data.data;
                         }
+                        
                         this.data.data = newData;
+                        this.data = Object.assign(this.data, data);
                     }
 //                    this.data = Object.assign(this.data, data);
                     console.debug('Dataset size after MERGE:', this.data.data.length);
