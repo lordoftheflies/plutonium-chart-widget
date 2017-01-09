@@ -167,7 +167,7 @@ Visualization widget.
             update: function(data) {
 //                var newData = (this.data && this.data.length > 2) ? this.data.slice(1, this.data.length - 2) : [];
 //                newData.push(row);
-//                this.data = newData;
+                this.data = data;
                 
                 
                 this.fire('d3-render', {});
