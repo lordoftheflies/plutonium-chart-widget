@@ -171,8 +171,11 @@ Visualization widget.
                             arr.splice(index, 1);
                         }
                     }, this);
+                    this.data = Object.assign(this.data, data);
+                } else {
+                    this.data = data;
                 }
-                this.data = Object.assign(this.data, data);
+
 
 
                 this.fire('d3-render', {});
