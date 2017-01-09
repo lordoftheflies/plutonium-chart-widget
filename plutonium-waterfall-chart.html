@@ -62,8 +62,8 @@ Visualization widget.
                     type: Object,
                     notify: true,
                     value: {
-                        width: 60,
-                        height: 50
+                        width: 40,
+                        height: 40
                     }
                 },
                 _cellSizeX: {
@@ -166,34 +166,45 @@ Visualization widget.
             },
             update: function (data) {
                 if (this.data) {
-                    if (this._g) {
-                        this._g.remove();
-                    }
-                    this._g = this._svg.append("g").attr("transform", "translate(" + this._margin.left + "," + this._margin.top + ")");
 
-                    if (data.deltaRows) {
+                    if (this.data.deltaRows) {
+                        this._g.remove();
+//                        delete this._g;
+                        this._g = this._svg.append("g").attr("transform", "translate(" + this._margin.left + "," + this._margin.top + ")");
+                        console.debug('Dataset size before shrink:', this.data.data.length);
+//
+                        var newData = [];
                         this.data.data.forEach(function (item, index, arr) {
-                            if (item.x < data.deltaRows) {
-                                arr.splice(index, 1);
+                            if (item.x < this.data.deltaRows) {
+//                                arr.splice(index, 1);
                             } else {
-                                item.x = item.x - data.deltaRows;
+                                item.x = item.x - this.data.deltaRows;
+                                newData.push(item);
                             }
                         }, this);
-
+                        console.debug('Dataset size after shrink:', this.data.data.length);
                         if (data.data) {
-                            data.data.forEach(function (item, index, arr) {
-                                item.x = item.x + data.deltaRows;
-                            }, this);
+                            newData = newData.concat(data.data);
+//                            data.data.forEach(function (item, index, arr) {
+//                                item.x = item.x - data.deltaRows;
+//                            }, this);
+                            delete data.data;
                         }
+                        
+                        this.data.data = newData;
+                        this.data = Object.assign(this.data, data);
                     }
-                    this.data = Object.assign(this.data, data);
+//                    this.data = Object.assign(this.data, data);
+                    console.debug('Dataset size after MERGE:', this.data.data.length);
+
+//                    this.set('data', Object.assign(this.data, data));
                 } else {
                     this.data = data;
                 }
 
 
 
-                this.fire('d3-render', {});
+//                this.fire('d3-render', {});
             }
         });
     </script>
