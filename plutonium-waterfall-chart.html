@@ -88,33 +88,27 @@ Visualization widget.
             _computeCellSizeY: function (resolution, width) {
                 return width / resolution.width;
             },
-
             _observeWaterfall: function (_cellSizeX, _cellSizeY, _g, data) {
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe-data');
-
                 this.fire('d3-render', {});
-
-
-
-
             },
             draw: function () {
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');
 
-                var zScale = d3.scaleQuantile().domain([-10, 0, 10]).range(this.data.domains.z);
+                var zScale = d3.scaleQuantile().domain([-1000, 0, 1000]).range(this.data.domains.z);
                 var self = this;
-
                 this._graph = this._g.append('g').attr('class', 'mapg').selectAll('.cellg')
                         .data(this.data.data, function (d) {
                             return d.x + ":" + d.y;
                         })
                         .enter()
                         .append("rect")
-                        .attr("y", function (d) {
-                            return d.x * self._cellSizeY;
-                        })
+
                         .attr("x", function (d) {
-                            return d.y * self._cellSizeX;
+                            return d.x * self._cellSizeX;
+                        })
+                        .attr("y", function (d) {
+                            return d.y * self._cellSizeY;
                         })
                         .attr("class", function (d) {
                             return "cell cell-border cr" + (d.x - 1) + " cc" + (d.y - 1);
@@ -190,7 +184,7 @@ Visualization widget.
 //                            }, this);
                             delete data.data;
                         }
-                        
+
                         this.data.data = newData;
                         this.data = Object.assign(this.data, data);
                     }
