@@ -69,26 +69,6 @@
                                     {"x": 19, "y": 9, "z": Math.floor((Math.random() * 10) + 1)}
                                 ]
                             });
-                            
-//                            var d = { "deltaRows":1,
-//                                "domains":{
-//                                    "x":[{"name":"2017-01-23","value":1}],
-//                                    "y":[{"name":"105.27749359654214 MHz","value":9}],
-//                                    "z":[{"name":"57.621569682875574 dB","value":"#eb712d"}]
-//                                },
-//                                "data":[
-//                                    {"x":0,"y":0,"z":804.6937780509538},
-//                                    {"x":0,"y":1,"z":347.8816788820408},
-//                                    {"x":0,"y":2,"z":280.90073132068216},
-//                                    {"x":0,"y":3,"z":398.97637288875455},
-//                                    {"x":0,"y":4,"z":190.3999047588425},
-//                                    {"x":0,"y":5,"z":115.29529693340324},
-//                                    {"x":0,"y":6,"z":905.1046152435026},
-//                                    {"x":0,"y":7,"z":139.79758773442464},
-//                                    {"x":0,"y":8,"z":521.6403923261753},
-//                                    {"x":0,"y":9,"z":57.621569682875574}
-//                                ]
-//                            }
                         });
 
                         var wsElement = document.querySelector("plutonium-websocket");
@@ -102,8 +82,6 @@
                         wsElement.addEventListener('ws-message', function (message) {
                             console.log('Ws message');
                             chart1.update(message.detail);
-                            // hello from the server
-                            console.log(message.detail);
                         });
                     </script>
                 </template>

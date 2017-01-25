@@ -176,34 +176,40 @@ Visualization widget.
                 ]).range(this.data.domains.z);
 
                 var legendElementWidth = this._width / this.data.domains.z.length;
-                var legend = this._g.append("g").selectAll(".legend")
+                var legendG = this._g.append("g").selectAll(".legend")
                         .data([0].concat(zScale.quantiles()), function (d) {
                             return d;
                         })
-                        .attr("transform", "translate(" + 100 + "," + 200 + ")")
                         .enter()
-                        .append("g").attr("class", "legend")
-                        .append("rect")
+                        .append("g").attr("class", "legend");
+
+                legendG.append("rect")
                         .attr("x", function (d, i) {
                             return legendElementWidth * i;
                         }).attr("y", this._height)
-//                        .attr("width", 20).attr("height", 20)
                         .attr("width", legendElementWidth).attr("height", this._cellSizeY)
                         .style("fill", function (d, i) {
                             return self.data.domains.z[i].name;
                         });
-//
-                legend.append("text")
+
+                legendG.append("text")
                         .attr("class", "mono")
                         .text(function (d) {
-                            return ">= " + Math.round(d);
+                            return Math.round(d);
                         })
                         .attr("x", function (d, i) {
                             return legendElementWidth * i;
                         })
-                        .attr("y", this._height + 10);
+                        .attr("y", this._height + this._cellSizeY + 15);
 
-                legend.exit().remove();
+                legendG.append("text").attr("class", "mono").text(d3.max(this.data.data, function (d) {
+                    return d.z;
+                }))
+                        .attr("x", function (d, i) {
+                            return self._width;
+                        })
+                        .attr("y", this._height + this._cellSizeY + 15);
+//                legend.exit().remove();
 
 
                 this._graph = this._g.append('g').attr('class', 'mapg').selectAll('.cellg')
@@ -227,7 +233,7 @@ Visualization widget.
                             return zScale(d.z).name;
                         })
                         .on("mouseover", function (d) {
-                            
+
                             d3.select(this).classed("cell-hover", true);
                             //Update the tooltip position and value
                             self._selectedPoint = d;
@@ -266,7 +272,7 @@ Visualization widget.
                             return self._cellSizeY * i;
                         })
                         .style("text-anchor", "end")
-                        .attr("transform", "translate(-6," + self._cellSizeX / 1.5 + ")")
+                        .attr("transform", "translate(-6," + (self._cellSizeY / 1.5 + 2) + ")")
                         .attr("class", function (d, i) {
                             return "rowLabel mono r" + i;
                         });
@@ -285,7 +291,7 @@ Visualization widget.
                             return self._cellSizeX * i;
                         })
                         .style("text-anchor", "left")
-                        .attr("transform", "translate(" + self._cellSizeY + ",-6) rotate (-90)")
+                        .attr("transform", "translate(" + (self._cellSizeX / 1.5 + 2) + ",-6) rotate (-90)")
                         .attr("class", function (d, i) {
                             return "colLabel mono c" + i;
                         });
