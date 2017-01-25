@@ -32,7 +32,7 @@
                     <button id="updateButton">Update</button>
                     <plutonium-websocket id="dataWs" url="ws://localhost:9006/data" as-json auto-close></plutonium-websocket>
                     <!--<plutonium-websocket id="dataWs" url="ws://localhost:8080/hedgehog-visualization-ms-0.0.1-SNAPSHOT/data" as-json auto-close></plutonium-websocket>-->
-                    <div id="chart1" is="plutonium-waterfall-chart" class="card"></div>
+                    <div id="chart1" is="plutonium-waterfall-chart" class="card" x-axis-name="Idő" y-axis-name="Hely" z-axis-name="Sebesség"></div>
                     <script>
                         var updateButton = document.querySelector('#updateButton');
                         var chart1 = document.querySelector('div#chart1');
@@ -40,8 +40,55 @@
                             console.log('Update waterfall');
                             chart1.update({
                                 "deltaRows": 1, 
+                                "resolution": { "width": 20, "height": 10},
                                 "domains": {
                                     "x": [{"name": "0", "value": 0}, {"name": "1", "value": 1}, {"name": "2", "value": 2}, {"name": "3", "value": 3}, {"name": "4", "value": 4}, {"name": "5", "value": 5}, {"name": "6", "value": 6}, {"name": "7", "value": 7}, {"name": "8", "value": 8}, {"name": "9", "value": 9}], 
+                                    "y": [{"name": "0", "value": 0}, {"name": "1", "value": 1}, {"name": "2", "value": 2}, {"name": "3", "value": 3}, {"name": "4", "value": 4}, {"name": "5", "value": 5}, {"name": "6", "value": 6}, {"name": "7", "value": 7}, {"name": "8", "value": 8}, {"name": "9", "value": 9}, {"name": "10", "value": 10}, {"name": "11", "value": 11}, {"name": "12", "value": 12}, {"name": "13", "value": 13}, {"name": "14", "value": 14}, {"name": "15", "value": 15}, {"name": "16", "value": 16}, {"name": "17", "value": 17}, {"name": "18", "value": 18}, {"name": "19", "value": 19}], 
+                                    "z": [{"name": "red", "value": 0}, {"name": "green", "value": 1}, {"name": "blue", "value": 2}, {"name": "yellow", "value": 3}]
+                                }, 
+                                "data": [
+                                    {"x": 0, "y": 9, "z": Math.floor((Math.random() * 10) + 1)}, 
+                                    {"x": 1, "y": 9, "z": Math.floor((Math.random() * 10) + 1)}, 
+                                    {"x": 2, "y": 9, "z": Math.floor((Math.random() * 10) + 1)}, 
+                                    {"x": 3, "y": 9, "z":  Math.floor((Math.random() * 10) + 1)}, 
+                                    {"x": 4, "y": 9, "z":  Math.floor((Math.random() * 10) + 1)}, 
+                                    {"x": 5, "y": 9, "z": Math.floor((Math.random() * 10) + 1)}, 
+                                    {"x": 6, "y": 9, "z": Math.floor((Math.random() * 10) + 1)}, 
+                                    {"x": 7, "y": 9, "z": Math.floor((Math.random() * 10) + 1)}, 
+                                    {"x": 8, "y": 9, "z": Math.floor((Math.random() * 10) + 1)}, 
+                                    {"x": 9, "y": 9, "z": Math.floor((Math.random() * 10) + 1)},
+                                    {"x": 10, "y": 9, "z": Math.floor((Math.random() * 10) + 1)}, 
+                                    {"x": 11, "y": 9, "z": Math.floor((Math.random() * 10) + 1)},
+                                    {"x": 12, "y": 9, "z": Math.floor((Math.random() * 10) + 1)},
+                                    {"x": 13, "y": 9, "z": Math.floor((Math.random() * 10) + 1)},
+                                    {"x": 14, "y": 9, "z": Math.floor((Math.random() * 10) + 1)},
+                                    {"x": 15, "y": 9, "z": Math.floor((Math.random() * 10) + 1)},
+                                    {"x": 16, "y": 9, "z": Math.floor((Math.random() * 10) + 1)},
+                                    {"x": 17, "y": 9, "z": Math.floor((Math.random() * 10) + 1)},
+                                    {"x": 18, "y": 9, "z": Math.floor((Math.random() * 10) + 1)},
+                                    {"x": 19, "y": 9, "z": Math.floor((Math.random() * 10) + 1)}
+                                ]
+                            });
+                            
+//                            var d = { "deltaRows":1,
+//                                "domains":{
+//                                    "x":[{"name":"2017-01-23","value":1}],
+//                                    "y":[{"name":"105.27749359654214 MHz","value":9}],
+//                                    "z":[{"name":"57.621569682875574 dB","value":"#eb712d"}]
+//                                },
+//                                "data":[
+//                                    {"x":0,"y":0,"z":804.6937780509538},
+//                                    {"x":0,"y":1,"z":347.8816788820408},
+//                                    {"x":0,"y":2,"z":280.90073132068216},
+//                                    {"x":0,"y":3,"z":398.97637288875455},
+//                                    {"x":0,"y":4,"z":190.3999047588425},
+//                                    {"x":0,"y":5,"z":115.29529693340324},
+//                                    {"x":0,"y":6,"z":905.1046152435026},
+//                                    {"x":0,"y":7,"z":139.79758773442464},
+//                                    {"x":0,"y":8,"z":521.6403923261753},
+//                                    {"x":0,"y":9,"z":57.621569682875574}
+//                                ]
+//                            }
                         });
 
                         var wsElement = document.querySelector("plutonium-websocket");
