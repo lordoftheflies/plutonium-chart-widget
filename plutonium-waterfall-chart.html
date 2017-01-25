@@ -36,6 +36,28 @@ Visualization widget.
                 stroke: steelblue;
                 stroke-width: 1.5px;
             }
+
+            #tooltip {
+                position: absolute;
+                height: auto;
+                padding: 10px;
+                background-color: white;
+                -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+                -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+                box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+                pointer-events: none;
+            }
+
+            #tooltip.hidden {
+                display: none;
+            }
+
+            #tooltip p {
+                margin: 0;
+                font-family: sans-serif;
+                font-size: 12px;
+                line-height: 20px;
+            }
         </style>
         <content select="plutonium-axis"></content>
         <!--        <div class="controls">
@@ -50,6 +72,23 @@ Visualization widget.
                         </p>
                     </template>
                 </div>-->
+        <div id="tooltip" class="hidden">
+            <p><span id="value"></p>
+            <table>
+                <tr>
+                    <td>[[xAxisName]]</td>
+                    <td>[[_selectedPoint.x]]</td>
+                </tr>
+                <tr>
+                    <td>[[yAxisName]]</td>
+                    <td>[[_selectedPoint.y]]</td>
+                </tr>
+                <tr>
+                    <td>[[zAxisName]]</td>
+                    <td>[[_selectedPoint.z]]</td>
+                </tr>
+            </table>
+        </div>
         <svg id="svg"></svg>
     </template>
 
@@ -58,13 +97,33 @@ Visualization widget.
             is: 'plutonium-waterfall-chart',
             extends: 'div',
             properties: {
+                xAxisName: {
+                    type: String,
+                    notify: true
+                },
+                yAxisName: {
+                    type: String,
+                    notify: true
+                },
+                zAxisName: {
+                    type: String,
+                    notify: true
+                },
+
+                _colorBucketCount: {
+                    type: Number,
+                    computed: '_computeColorBucketCount(data)',
+
+                },
+
                 _resolution: {
                     type: Object,
-                    notify: true,
-                    value: {
-                        width: 40,
-                        height: 40
-                    }
+                    computed: '_computeResolution(data)'
+//                    notify: true,
+//                    value: {
+//                        width: 40,
+//                        height: 40
+//                    }
                 },
                 _cellSizeX: {
                     type: Number,
@@ -73,6 +132,10 @@ Visualization widget.
                 _cellSizeY: {
                     type: Number,
                     computed: '_computeCellSizeY(_resolution, _width)'
+                },
+                _selectedPoint: {
+                    type: Object,
+                    notify: true
                 }
             },
             behaviors: [
@@ -82,21 +145,67 @@ Visualization widget.
                 '_observeWaterfall(_cellSizeX, _cellSizeY, _g, data)'
             ],
 
+            _computeColorBucketCount: function (data) {
+                return (data.domains.z.length && data.domains.z.length > 0) ? data.domains.z.length - 1 : 0;
+            },
             _computeCellSizeX: function (resolution, height) {
                 return height / resolution.height;
             },
             _computeCellSizeY: function (resolution, width) {
                 return width / resolution.width;
             },
+            _computeResolution: function (data) {
+                return data.resolution;
+            },
             _observeWaterfall: function (_cellSizeX, _cellSizeY, _g, data) {
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe-data');
                 this.fire('d3-render', {});
             },
             draw: function () {
+                var self = this;
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');
 
-                var zScale = d3.scaleQuantile().domain([-1000, 0, 1000]).range(this.data.domains.z);
-                var self = this;
+                var zScale = d3.scaleQuantile().domain([
+                    d3.min(this.data.data, function (d) {
+                        return d.z;
+                    }),
+                    this._colorBucketCount,
+                    d3.max(this.data.data, function (d) {
+                        return d.z;
+                    })
+                ]).range(this.data.domains.z);
+
+                var legendElementWidth = this._width / this.data.domains.z.length;
+                var legend = this._g.append("g").selectAll(".legend")
+                        .data([0].concat(zScale.quantiles()), function (d) {
+                            return d;
+                        })
+                        .attr("transform", "translate(" + 100 + "," + 200 + ")")
+                        .enter()
+                        .append("g").attr("class", "legend")
+                        .append("rect")
+                        .attr("x", function (d, i) {
+                            return legendElementWidth * i;
+                        }).attr("y", this._height)
+//                        .attr("width", 20).attr("height", 20)
+                        .attr("width", legendElementWidth).attr("height", this._cellSizeY)
+                        .style("fill", function (d, i) {
+                            return self.data.domains.z[i].name;
+                        });
+//
+                legend.append("text")
+                        .attr("class", "mono")
+                        .text(function (d) {
+                            return ">= " + Math.round(d);
+                        })
+                        .attr("x", function (d, i) {
+                            return legendElementWidth * i;
+                        })
+                        .attr("y", this._height + 10);
+
+                legend.exit().remove();
+
+
                 this._graph = this._g.append('g').attr('class', 'mapg').selectAll('.cellg')
                         .data(this.data.data, function (d) {
                             return d.x + ":" + d.y;
@@ -115,6 +224,29 @@ Visualization widget.
                         })
                         .attr("width", self._cellSizeX).attr("height", self._cellSizeY)
                         .style("fill", function (d) {
+                            return zScale(d.z).name;
+                        })
+                        .on("mouseover", function (d) {
+                            
+                            d3.select(this).classed("cell-hover", true);
+                            //Update the tooltip position and value
+                            self._selectedPoint = d;
+                            d3.select("#tooltip")
+                                    .style("left", (d3.event.pageX + 10) + "px")
+                                    .style("top", (d3.event.pageY - 10) + "px")
+//                                    .select("#value")
+//                                    .text(JSON.stringify(d));
+                            //Show the tooltip
+                            d3.select("#tooltip").classed("hidden", false);
+                        })
+                        .on("mouseout", function () {
+                            d3.select(this).classed("cell-hover", false);
+                            d3.select("#tooltip").classed("hidden", true);
+                        })
+                        .append("text")
+                        .attr("font-size", (self._cellSizeY - 1) + "px")
+                        .attr("color", "black")
+                        .text(function (d) {
                             return zScale(d.z).name;
                         });
 
@@ -169,10 +301,10 @@ Visualization widget.
 //
                         var newData = [];
                         this.data.data.forEach(function (item, index, arr) {
-                            if (item.x < this.data.deltaRows) {
+                            if (item.y < this.data.deltaRows) {
 //                                arr.splice(index, 1);
                             } else {
-                                item.x = item.x - this.data.deltaRows;
+                                item.y = item.y - this.data.deltaRows;
                                 newData.push(item);
                             }
                         }, this);
