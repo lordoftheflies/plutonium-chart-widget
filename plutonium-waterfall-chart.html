@@ -89,7 +89,8 @@ Visualization widget.
                 </tr>
             </table>
         </div>
-        <svg id="svg"></svg>
+        <svg id="svg">
+        </svg>
     </template>
 
     <script>
@@ -212,49 +213,58 @@ Visualization widget.
 //                legend.exit().remove();
 
 
-                this._graph = this._g.append('g').attr('class', 'mapg').selectAll('.cellg')
-                        .data(this.data.data, function (d) {
-                            return d.x + ":" + d.y;
-                        })
-                        .enter()
-                        .append("rect")
+                this._graph = this._g
+                        .append('image')
+                        .attr('xlink:href', 'http://localhost:9006/data-generator/image?width=' + this._width + '&height=' + this._height + '&pixel_width=' + this._resolution.width + '&pixel_height=' + this._resolution.height + '&opacity=255&ver=' + new Date().getTime())
+                        .attr('x', '0')
+                        .attr('y', '0')
+                        .attr('width', this._width + 'px')
+                        .attr('height', this._height + 'px');
 
-                        .attr("x", function (d) {
-                            return d.x * self._cellSizeX;
-                        })
-                        .attr("y", function (d) {
-                            return d.y * self._cellSizeY;
-                        })
-                        .attr("class", function (d) {
-                            return "cell cell-border cr" + (d.x - 1) + " cc" + (d.y - 1);
-                        })
-                        .attr("width", self._cellSizeX).attr("height", self._cellSizeY)
-                        .style("fill", function (d) {
-                            return zScale(d.z).name;
-                        })
-                        .on("mouseover", function (d) {
-
-                            d3.select(this).classed("cell-hover", true);
-                            //Update the tooltip position and value
-                            self._selectedPoint = d;
-                            d3.select("#tooltip")
-                                    .style("left", (d3.event.pageX + 10) + "px")
-                                    .style("top", (d3.event.pageY - 10) + "px")
-//                                    .select("#value")
-//                                    .text(JSON.stringify(d));
-                            //Show the tooltip
-                            d3.select("#tooltip").classed("hidden", false);
-                        })
-                        .on("mouseout", function () {
-                            d3.select(this).classed("cell-hover", false);
-                            d3.select("#tooltip").classed("hidden", true);
-                        })
-                        .append("text")
-                        .attr("font-size", (self._cellSizeY - 1) + "px")
-                        .attr("color", "black")
-                        .text(function (d) {
-                            return zScale(d.z).name;
-                        });
+                        
+//                this._graph = this._g.append('g').attr('class', 'mapg').selectAll('.cellg')
+//                        .data(this.data.data, function (d) {
+//                            return d.x + ":" + d.y;
+//                        })
+//                        .enter()
+//                        .append("rect")
+//
+//                        .attr("x", function (d) {
+//                            return d.x * self._cellSizeX;
+//                        })
+//                        .attr("y", function (d) {
+//                            return d.y * self._cellSizeY;
+//                        })
+//                        .attr("class", function (d) {
+//                            return "cell cell-border cr" + (d.x - 1) + " cc" + (d.y - 1);
+//                        })
+//                        .attr("width", self._cellSizeX).attr("height", self._cellSizeY)
+//                        .style("fill", function (d) {
+//                            return zScale(d.z).name;
+//                        })
+//                        .on("mouseover", function (d) {
+//
+//                            d3.select(this).classed("cell-hover", true);
+//                            //Update the tooltip position and value
+//                            self._selectedPoint = d;
+//                            d3.select("#tooltip")
+//                                    .style("left", (d3.event.pageX + 10) + "px")
+//                                    .style("top", (d3.event.pageY - 10) + "px")
+////                                    .select("#value")
+////                                    .text(JSON.stringify(d));
+//                            //Show the tooltip
+//                            d3.select("#tooltip").classed("hidden", false);
+//                        })
+//                        .on("mouseout", function () {
+//                            d3.select(this).classed("cell-hover", false);
+//                            d3.select("#tooltip").classed("hidden", true);
+//                        })
+//                        .append("text")
+//                        .attr("font-size", (self._cellSizeY - 1) + "px")
+//                        .attr("color", "black")
+//                        .text(function (d) {
+//                            return zScale(d.z).name;
+//                        });
 
 
                 // TODO: separate component
@@ -335,7 +345,18 @@ Visualization widget.
                 }
 
 
-
+                if (this._graph) {
+                    this._graph.remove();
+                    this._graph = this._g.append('image')
+                            .attr('xlink:href', 'http://localhost:9006/data-generator/image?width=' 
+                            + this._width + '&height=' 
+                            + this._height + '&pixel_width=' 
+                            + this._resolution.width + '&pixel_height=' + this._resolution.height + '&opacity=255&ver=' + new Date().getTime())
+                            .attr('x', '0')
+                            .attr('y', '0')
+                            .attr('width', this._width + 'px')
+                            .attr('height', this._height + 'px');
+                }
 //                this.fire('d3-render', {});
             }
         });
