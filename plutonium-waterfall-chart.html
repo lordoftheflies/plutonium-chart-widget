@@ -213,15 +213,15 @@ Visualization widget.
 //                legend.exit().remove();
 
 
-                this._graph = this._g
-                        .append('image')
-                        .attr('xlink:href', 'http://localhost:9006/data-generator/image?width=' + this._width + '&height=' + this._height + '&pixel_width=' + this._resolution.width + '&pixel_height=' + this._resolution.height + '&opacity=255&ver=' + new Date().getTime())
+                this._graph = this._g.append('image');
+
+                this._graph.attr('xlink:href', 'http://localhost:9006/data-generator/image?width=' + this._width + '&height=' + this._height + '&pixel_width=' + this._resolution.width + '&pixel_height=' + this._resolution.height + '&opacity=255&ver=' + new Date().getTime())
                         .attr('x', '0')
                         .attr('y', '0')
                         .attr('width', this._width + 'px')
                         .attr('height', this._height + 'px');
 
-                        
+
 //                this._graph = this._g.append('g').attr('class', 'mapg').selectAll('.cellg')
 //                        .data(this.data.data, function (d) {
 //                            return d.x + ":" + d.y;
@@ -307,14 +307,29 @@ Visualization widget.
                         });
             },
             update: function (data) {
+                
+                
+
+
+
                 if (this.data) {
 
+                    this._graph.attr('xlink:href', 'http://localhost:9006/data-generator/image?width='
+                        + this._width + '&height='
+                        + this._height + '&pixel_width='
+                        + this._resolution.width + '&pixel_height='
+                        + this._resolution.height + '&opacity=255&ver='
+                        + new Date().getTime());
+
                     if (this.data.deltaRows) {
-                        this._g.remove();
+//                        this._g.remove();
 //                        delete this._g;
-                        this._g = this._svg.append("g").attr("transform", "translate(" + this._margin.left + "," + this._margin.top + ")");
+//                        this._g = this._svg.append("g").attr("transform", "translate(" + this._margin.left + "," + this._margin.top + ")");
                         console.debug('Dataset size before shrink:', this.data.data.length);
 //
+
+
+
                         var newData = [];
                         this.data.data.forEach(function (item, index, arr) {
                             if (item.y < this.data.deltaRows) {
@@ -345,18 +360,18 @@ Visualization widget.
                 }
 
 
-                if (this._graph) {
-                    this._graph.remove();
-                    this._graph = this._g.append('image')
-                            .attr('xlink:href', 'http://localhost:9006/data-generator/image?width=' 
-                            + this._width + '&height=' 
-                            + this._height + '&pixel_width=' 
-                            + this._resolution.width + '&pixel_height=' + this._resolution.height + '&opacity=255&ver=' + new Date().getTime())
-                            .attr('x', '0')
-                            .attr('y', '0')
-                            .attr('width', this._width + 'px')
-                            .attr('height', this._height + 'px');
-                }
+//                if (this._graph) {
+//                    this._graph.remove();
+//                    this._graph = this._g.append('image')
+//                            .attr('xlink:href', 'http://localhost:9006/data-generator/image?width=' 
+//                            + this._width + '&height=' 
+//                            + this._height + '&pixel_width=' 
+//                            + this._resolution.width + '&pixel_height=' + this._resolution.height + '&opacity=255&ver=' + new Date().getTime())
+//                            .attr('x', '0')
+//                            .attr('y', '0')
+//                            .attr('width', this._width + 'px')
+//                            .attr('height', this._height + 'px');
+//                }
 //                this.fire('d3-render', {});
             }
         });
