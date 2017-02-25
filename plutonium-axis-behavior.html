@@ -14,17 +14,53 @@
      */
     Plutonium.AxisBehaviorImpl = {
         properties: {
+            /**
+             * Orientation enumeration. 
+             * Possible values: left, right, top, bottom.
+             * Left and right uninterpretable on vertical axises. 
+             * Top and down uninterpretable on horizontal axises. 
+             * @type {string} 
+             */
+            orientation: {
+                type: String,
+                value: 'left'
+            },
+
+            /**
+             * Property to control axis type.
+             * Possible values: horizontal, vertical, legend.
+             * @type {string}
+             */
+            domain: {
+                type: String,
+                value: 'horizontal'
+            },
+
+            /**
+             * Center of the axis.
+             * @type {number}
+             */
+            center: {
+                type: Number,
+                value: 0.0
+            },
+            /**
+             * Span of the viewed window.
+             * @type {number}
+             */
+            span: {
+                type: Number,
+                value: 1.0
+            },
+            /**
+             * String pattern for format time based axises.
+             * Default is ISO 8601
+             * @type {string}
+             */
             timeParse: {
                 type: String,
                 notify: true,
                 value: '%d-%b-%y'
-            },
-            size: {
-                type: Number,
-                value: 0
-            },
-            orientation: {
-                type: String,
             },
             _scale: {
                 type: Object
@@ -34,10 +70,13 @@
             }
         },
         observers: [
-            '_observeTimeParsePattern(timeParse)'
+            '_observeTimeParsePattern(timeParse)',
+            '_observeVisiblePart(span, center)',
+            '_observeOrientation(orientation, _scale)'
         ],
         listeners: {
-            'iron-resize': '_onResize'
+            'iron-resize': '_onResize',
+            'd3-update': '_onD3Update'
         },
         created: function () {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'created');
@@ -55,16 +94,44 @@
 
         _onResize: function (event, details) {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'resize');
-            if (this.timeParse) {
-                this._axis = d3.scaleTime().rangeRound([0, Polymer.dom(this).parentNode._width]);
-            } else {
-                this._axis = d3.scaleLinear().rangeRound([0, Polymer.dom(this).parentNode._width]);
-            }
+            
+        },
+        _onD3Update: function(event, details) {
+            
         },
 
         _observeTimeParsePattern: function (timeParse) {
             if (timeParse) {
                 this._parseTime = d3.timeParse(timeParse);
+            }
+        },
+        _observeVisiblePart: function(span, center) {
+            if (this.timeParse) {
+                this._scale = d3.scaleTime().rangeRound([center - span / 2, center + span / 2]);
+            } else {
+                this._scale = d3.scaleLinear().rangeRound([center - span / 2, center + span / 2]);
+            }
+        },
+
+       
+        _observeOrientation: function (orientation, _scale) {
+//            this._scale = d3.scaleOrdinal(); //.padding(0.1);
+            switch (orientation) {
+                case 'left':
+                    this._axis = d3.axisLeft(_scale);
+                    break;
+                case 'right':
+                    this._axis = d3.axisRight(_scale);
+                    break;
+                case 'top':
+                    this._axis = d3.axisTop(_scale);
+                    break;
+                case 'bottom':
+                    this._axis = d3.axisBottom(_scale);
+                    break;
+                default:
+                    console.error(this.is, 'orientation value is invalid:', orientation);
+                    break;
             }
         }
     };
