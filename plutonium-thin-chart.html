@@ -68,6 +68,11 @@ Visualization widget.
             is: 'plutonium-thin-chart',
             extends: 'div',
             properties: {
+                dataUrl: {
+                    type: String,
+                    notify: true
+                },
+
                 xAxisName: {
                     type: String,
                     notify: true
@@ -105,7 +110,7 @@ Visualization widget.
                 Plutonium.ChartBehavior
             ],
             observers: [
-                '_observeWaterfall(_cellSizeX, _cellSizeY, _g, data)'
+                '_observeServerSideData(_g)'
             ],
 
             _computeColorBucketCount: function (data) {
@@ -120,7 +125,7 @@ Visualization widget.
             _computeResolution: function (data) {
                 return data.resolution;
             },
-            _observeWaterfall: function (_cellSizeX, _cellSizeY, _g, data) {
+            _observeServerSideData: function (_cellSizeX, _cellSizeY, _g, data) {
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe-data');
                 this.fire('d3-render', {});
             },
@@ -128,56 +133,56 @@ Visualization widget.
                 var self = this;
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');
 
-                var zScale = d3.scaleQuantile().domain([
-                    d3.min(this.data.data, function (d) {
-                        return d.z;
-                    }),
-                    this._colorBucketCount,
-                    d3.max(this.data.data, function (d) {
-                        return d.z;
-                    })
-                ]).range(this.data.domains.z);
+//                var zScale = d3.scaleQuantile().domain([
+//                    d3.min(this.data.data, function (d) {
+//                        return d.z;
+//                    }),
+//                    this._colorBucketCount,
+//                    d3.max(this.data.data, function (d) {
+//                        return d.z;
+//                    })
+//                ]).range(this.data.domains.z);
 
-                var legendElementWidth = this._width / this.data.domains.z.length;
-                var legendG = this._g.append("g").selectAll(".legend")
-                        .data([0].concat(zScale.quantiles()), function (d) {
-                            return d;
-                        })
-                        .enter()
-                        .append("g").attr("class", "legend");
-
-                legendG.append("rect")
-                        .attr("x", function (d, i) {
-                            return legendElementWidth * i;
-                        }).attr("y", this._height)
-                        .attr("width", legendElementWidth).attr("height", this._cellSizeY)
-                        .style("fill", function (d, i) {
-                            return self.data.domains.z[i].name;
-                        });
-
-                legendG.append("text")
-                        .attr("class", "mono")
-                        .text(function (d) {
-                            return Math.round(d);
-                        })
-                        .attr("x", function (d, i) {
-                            return legendElementWidth * i;
-                        })
-                        .attr("y", this._height + this._cellSizeY + 15);
-
-                legendG.append("text").attr("class", "mono").text(d3.max(this.data.data, function (d) {
-                    return d.z;
-                }))
-                        .attr("x", function (d, i) {
-                            return self._width;
-                        })
-                        .attr("y", this._height + this._cellSizeY + 15);
-//                legend.exit().remove();
-
+//                var legendElementWidth = this._width / this.data.domains.z.length;
+//                var legendG = this._g.append("g").selectAll(".legend")
+//                        .data([0].concat(zScale.quantiles()), function (d) {
+//                            return d;
+//                        })
+//                        .enter()
+//                        .append("g").attr("class", "legend");
+//
+//                legendG.append("rect")
+//                        .attr("x", function (d, i) {
+//                            return legendElementWidth * i;
+//                        }).attr("y", this._height)
+//                        .attr("width", legendElementWidth).attr("height", this._cellSizeY)
+//                        .style("fill", function (d, i) {
+//                            return self.data.domains.z[i].name;
+//                        });
+//
+//                legendG.append("text")
+//                        .attr("class", "mono")
+//                        .text(function (d) {
+//                            return Math.round(d);
+//                        })
+//                        .attr("x", function (d, i) {
+//                            return legendElementWidth * i;
+//                        })
+//                        .attr("y", this._height + this._cellSizeY + 15);
+//
+//                legendG.append("text").attr("class", "mono").text(d3.max(this.data.data, function (d) {
+//                    return d.z;
+//                }))
+//                        .attr("x", function (d, i) {
+//                            return self._width;
+//                        })
+//                        .attr("y", this._height + this._cellSizeY + 15);
+////                legend.exit().remove();
+//
 
                 this._graph = this._g.append('image');
 
-                this._graph.attr('xlink:href', 'http://localhost:9006/data-generator/image?width=' + this._width + '&height=' + this._height + '&pixel_width=' + this._resolution.width + '&pixel_height=' + this._resolution.height + '&opacity=255&ver=' + new Date().getTime())
+                this._graph.attr('xlink:href', this.dataUrl)
                         .attr('x', '0')
                         .attr('y', '0')
                         .attr('width', this._width + 'px')
@@ -224,12 +229,7 @@ Visualization widget.
                         });
             },
             update: function (data) {
-                    this._graph.attr('xlink:href', 'http://localhost:9006/data-generator/image?width='
-                        + this._width + '&height='
-                        + this._height + '&pixel_width='
-                        + this._resolution.width + '&pixel_height='
-                        + this._resolution.height + '&opacity=255&ver='
-                        + new Date().getTime());
+                this._graph.attr('xlink:href', this.dataUrl);
             }
         });
     </script>
