@@ -91,7 +91,7 @@ Visualization widget.
                 },
                 _resolution: {
                     type: Object,
-                    computed: '_computeResolution(data)'
+                    computed: '_computeResolution(dataUrl)'
                 },
                 _cellSizeX: {
                     type: Number,
@@ -110,7 +110,7 @@ Visualization widget.
                 Plutonium.ChartBehavior
             ],
             observers: [
-                '_observeServerSideData(_g)'
+                '_observeServerSideData(_g, dataUrl)'
             ],
 
             _computeColorBucketCount: function (data) {
@@ -125,7 +125,7 @@ Visualization widget.
             _computeResolution: function (data) {
                 return data.resolution;
             },
-            _observeServerSideData: function (_cellSizeX, _cellSizeY, _g, data) {
+            _observeServerSideData: function (_cellSizeX, _cellSizeY, _g, dataUrl) {
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe-data');
                 this.fire('d3-render', {});
             },
