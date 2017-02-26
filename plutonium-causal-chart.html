@@ -201,7 +201,7 @@ Visualization widget.
             },
             update: function (data) {
 //                console.debug();
-                this._g.attr('transform', 'translate(0, -1)');
+                this._g = this._g.attr('transform', 'translate(0, -1)');
         
                 var line = this._g.append('image');
                 line.attr('xlink:href', this.dataUrl)
