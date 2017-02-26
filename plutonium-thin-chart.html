@@ -194,8 +194,10 @@ Visualization widget.
                     console.debug('- ', (distributedScales[index].id ? distributedScales[index].is + '#' + distributedScales[index].id : distributedScales[index].is));
                     distributedScales[index].fire('d3-update', {
                         graphics: this._g,
+                        container: this._svg,
                         width: this._width,
-                        height: this._height
+                        height: this._height,
+                        margin: this._margin
                     });
                 }
 

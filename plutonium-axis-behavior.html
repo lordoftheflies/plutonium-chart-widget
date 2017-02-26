@@ -14,6 +14,15 @@
      */
     Plutonium.AxisBehaviorImpl = {
         properties: {
+            label: {
+                type: String,
+                notify: true
+            },
+            unit: {
+                type: String,
+                notify: true
+            },
+
             /**
              * Orientation enumeration. 
              * Possible values: left, right, top, bottom.
@@ -131,23 +140,28 @@
             this._ranges.domain([this.center - this.span / 2, this.center + this.span / 2]);
 
             var transformationAttribute;
+            var transformationAttributeForLabel;
             switch (this.orientation) {
                 case 'left':
                     this._axis = d3.axisLeft(this._ranges);
                     transformationAttribute = 'translate(0,0)';
+//                    transformationAttributeForLabel = 'translate(' + (details.width / 2) + ' ,' + (-details.margin.left) + ') ' + 'rotate(-90)';
+                    transformationAttributeForLabel = 'translate(' + (-details.margin.left / 2) + ' ,' + (details.height / 2) + ') ' + 'rotate(-90)';
                     break;
                 case 'right':
                     this._axis = d3.axisRight(this._ranges);
                     transformationAttribute = 'translate(' + details.width + ', 0)';
-//                    transformationAttribute =  "translate(" + (details.width/2) + " ," + (details.height + 30) + ")";
+                    transformationAttributeForLabel = 'translate(' + (details.width + details.margin.right) + ', ' + (details.height / 2) + ')' + ' rotate(90)';
                     break;
                 case 'top':
                     this._axis = d3.axisTop(this._ranges);
                     transformationAttribute = 'translate(0,0)';
+                    transformationAttributeForLabel = 'translate(' + (details.width / 2) + ',' + (-details.margin.top) + ')';
                     break;
                 case 'bottom':
                     this._axis = d3.axisBottom(this._ranges);
                     transformationAttribute = "translate(0," + details.height + ')';
+                    transformationAttributeForLabel = "translate(" + (details.width / 2) + " ," + (details.height + 10 + details.margin.top) + ")";
                     break;
                 default:
                     console.error(this.is, 'orientation value is invalid:', this.orientation);
@@ -155,12 +169,19 @@
             }
 
 
+// text label for the x axis
+
 
 
             details.graphics.append("g")
                     .attr("transform", transformationAttribute)
-                    .call(this._axis)
-                    ;
+                    .call(this._axis);
+
+            details.graphics.append("text")
+                    .attr("transform", transformationAttributeForLabel)
+                    .style("text-anchor", "middle")
+                    .text(this.label + " (" + this.unit + ")");
+
 ////                    .scale(this._scale)
 //                    .enter()
 //                    .append("text")
