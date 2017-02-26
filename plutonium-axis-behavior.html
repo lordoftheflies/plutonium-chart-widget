@@ -174,13 +174,16 @@
 
 
             details.graphics.append("g")
+                    .attr("class", "axis")
                     .attr("transform", transformationAttribute)
                     .call(this._axis);
 
             details.graphics.append("text")
+                    .attr("class", "axis-label")
                     .attr("transform", transformationAttributeForLabel)
                     .style("text-anchor", "middle")
-                    .text(this.label + " (" + this.unit + ")");
+                    .text(this.label + " (" + this.unit + ")")
+                    .attr("class", 'axis-label');
 
 ////                    .scale(this._scale)
 //                    .enter()
