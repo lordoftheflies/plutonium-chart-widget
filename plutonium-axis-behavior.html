@@ -60,7 +60,7 @@
             timeParse: {
                 type: String,
                 notify: true,
-                value: '%d-%b-%y'
+//                value: '%d-%b-%y'
             },
             _scale: {
                 type: Object
@@ -71,8 +71,8 @@
         },
         observers: [
             '_observeTimeParsePattern(timeParse)',
-            '_observeVisiblePart(span, center)',
-            '_observeOrientation(orientation, _scale)'
+//            '_observeVisiblePart(span, center)',
+//            '_observeOrientation(orientation, _scale)'
         ],
         listeners: {
             'iron-resize': '_onResize',
@@ -94,27 +94,110 @@
 
         _onResize: function (event, details) {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'resize');
-            
+
         },
-        _onD3Update: function(event, details) {
-            
+
+        _getRange: function (domain, details) {
+            var range;
+            switch (domain) {
+                case 'horizontal':
+                    range = [0, details.width];
+                    break;
+                case 'vertical':
+                    range = [details.height, 0];
+                    break;
+                case 'legend':
+                    range = [0, 0];
+                    break;
+                default:
+                    range = [0, 0];
+                    break;
+            }
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'range', range);
+            return range;
+        },
+
+        _onD3Update: function (event, details) {
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'd3-draw');
+
+            if (this.timeParse) {
+//                this._scale = d3.scaleTime().rangeRound([center - span / 2, center + span / 2]);
+                this._ranges = d3.scaleTime().range(this._getRange(this.domain, details));
+            } else {
+                this._ranges = d3.scaleLinear().range(this._getRange(this.domain, details));
+//                this._scale = d3.scaleLinear().rangeRound([center - span / 2, center + span / 2]);
+            }
+
+            this._ranges.domain([this.center - this.span / 2, this.center + this.span / 2]);
+
+            var transformationAttribute;
+            switch (this.orientation) {
+                case 'left':
+                    this._axis = d3.axisLeft(this._ranges);
+                    transformationAttribute = 'translate(0,0)';
+                    break;
+                case 'right':
+                    this._axis = d3.axisRight(this._ranges);
+                    transformationAttribute = 'translate(' + details.width + ', 0)';
+//                    transformationAttribute =  "translate(" + (details.width/2) + " ," + (details.height + 30) + ")";
+                    break;
+                case 'top':
+                    this._axis = d3.axisTop(this._ranges);
+                    transformationAttribute = 'translate(0,0)';
+                    break;
+                case 'bottom':
+                    this._axis = d3.axisBottom(this._ranges);
+                    transformationAttribute = "translate(0," + details.height + ')';
+                    break;
+                default:
+                    console.error(this.is, 'orientation value is invalid:', this.orientation);
+                    break;
+            }
+
+
+
+
+            details.graphics.append("g")
+                    .attr("transform", transformationAttribute)
+                    .call(this._axis)
+                    ;
+////                    .scale(this._scale)
+//                    .enter()
+//                    .append("text")
+//                    .attr("font-size", 12 + "px")
+////                    .text(function (d) {
+////                        return d;
+////                    })
+//                    .attr("x", 0)
+//                    .attr("y", function (d, i) {
+//                        return 12 * i;
+//                    })
+//                    .style("text-anchor", "end")
+//                    .attr("transform", "translate(-6," + 12 + ")")
+//                    .attr("class", function (d, i) {
+//                        return "rowLabel mono r" + i;
+//                    });
         },
 
         _observeTimeParsePattern: function (timeParse) {
             if (timeParse) {
                 this._parseTime = d3.timeParse(timeParse);
+                console.debug((this.id ? this.is + '#' + this.id : this.is), 'set ne time pattern', timeParse);
             }
         },
-        _observeVisiblePart: function(span, center) {
+        _observeVisiblePart: function (span, center) {
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe visible parts with center', '=', center, ',', 'span', '=', span);
             if (this.timeParse) {
-                this._scale = d3.scaleTime().rangeRound([center - span / 2, center + span / 2]);
+//                this._scale = d3.scaleTime().rangeRound([center - span / 2, center + span / 2]);
+                this._ranges = d3.scaleTime().range([center - span / 2, center + span / 2]);
             } else {
-                this._scale = d3.scaleLinear().rangeRound([center - span / 2, center + span / 2]);
+                this._ranges = d3.scaleLinear().range([center - span / 2, center + span / 2]);
+//                this._scale = d3.scaleLinear().rangeRound([center - span / 2, center + span / 2]);
             }
         },
 
-       
         _observeOrientation: function (orientation, _scale) {
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe orientation', 'orientation', '=', orientation);
 //            this._scale = d3.scaleOrdinal(); //.padding(0.1);
             switch (orientation) {
                 case 'left':

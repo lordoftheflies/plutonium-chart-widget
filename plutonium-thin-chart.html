@@ -59,7 +59,7 @@ Visualization widget.
                 line-height: 20px;
             }
         </style>
-        <content select="scale"></content>
+        <content select=".scale"></content>
         <svg id="svg"></svg>
     </template>
 
@@ -188,6 +188,16 @@ Visualization widget.
                         .attr('width', this._width + 'px')
                         .attr('height', this._height + 'px');
 
+                console.debug((this.id ? this.is + '#' + this.id : this.is), 'render scales');
+                var distributedScales = this.queryAllEffectiveChildren('.scale');
+                for (var index in distributedScales) {
+                    console.debug('- ', (distributedScales[index].id ? distributedScales[index].is + '#' + distributedScales[index].id : distributedScales[index].is));
+                    distributedScales[index].fire('d3-update', {
+                        graphics: this._g,
+                        width: this._width,
+                        height: this._height
+                    });
+                }
 
 //                // TODO: separate component
 //                this._xAxis = this._g.append("g")
