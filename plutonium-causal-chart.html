@@ -15,8 +15,9 @@ Visualization widget.
             :host {
                 display: block;
                 height: 400px;
+                position: relative;
             }
-            
+
             .controls {
                 display: inline-block;
                 margin: 0 0 0 20px;
@@ -48,6 +49,11 @@ Visualization widget.
 
             #tooltip.hidden {
                 display: none;
+            }
+
+            #imgLines,
+            #svg {
+                position: absolute;
             }
 
             #tooltip p {
@@ -83,10 +89,16 @@ Visualization widget.
                     type: String,
                     notify: true
                 },
-                _colorBucketCount: {
+//                _colorBucketCount: {
+//                    type: Number,
+//                    computed: '_computeColorBucketCount(data)',
+//                },
+
+                _tick: {
                     type: Number,
-                    computed: '_computeColorBucketCount(data)',
+                    value: 1
                 },
+
                 _resolution: {
                     type: Object,
                     computed: '_computeResolution(dataUrl)'
@@ -102,6 +114,11 @@ Visualization widget.
                 _selectedPoint: {
                     type: Object,
                     notify: true
+                },
+
+                _data: {
+                    type: Array,
+                    value: []
                 }
             },
             behaviors: [
@@ -178,13 +195,17 @@ Visualization widget.
 ////                legend.exit().remove();
 //
 
-                this._graph = this._g.append('image');
-
-                this._graph.attr('xlink:href', this.dataUrl)
+                this._graph = d3.select(this).append('canvas')
+//                this._graph = this._g.apped('g').html('<canvas></canvas>')
+                        .attr("id", "imgLines")
+//                        .attr()
+//                        .attr('xlink:href', this.dataUrl)
                         .attr('x', '0')
                         .attr('y', '0')
+                        .attr("style", "margin-left: " + this._margin.left + "px; margin-top: " + this._margin.top + "px;")
                         .attr('width', this._width + 'px')
-                        .attr('height', this._height + 'px');
+                        .attr('height', this._height + 'px')
+                        ;
 
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'render scales');
                 var distributedScales = this.queryAllEffectiveChildren('.scale');
@@ -201,16 +222,41 @@ Visualization widget.
             },
             update: function (data) {
 //                console.debug();
-                this._g = this._g.attr('transform', 'translate(0, -1)');
-        
-                var line = this._g.append('image');
-                line.attr('xlink:href', this.dataUrl)
-                        .attr('x', '0')
-                        .attr('y', '0')
-                        .attr('width', this._width + 'px')
-                        .attr('height', 1 + 'px');
-                
-                
+                this._graph = this._graph.attr('transform', 'translate(0, ' + (this._tick++) + ')');
+
+//                var line = this._graph
+////                        .enter()
+//                        .append('svg:image');
+//                line.attr('xlink:href', this.dataUrl)
+//                        .attr('x', '0')
+//                        .attr('y', '0')
+//                        .attr('width', this._width + 'px')
+//                        .attr('height', 1 + 'px');
+
+                var canvas = document.getElementById('imgLines');
+                var context = canvas.getContext("2d");
+                var self = this;
+
+                var img = new Image();
+                img.src = this.dataUrl;
+                img.onload = function () {
+                    self._data.push(img);
+                    console.debug('add new line', self._data);
+                };
+
+                context.beginPath();
+                this._data.forEach(function (d, i) {
+
+
+                    console.debug('draw line', d, i);
+
+                    context.drawImage(d, 0, i);
+//                    context.rect(scale(d), 150, 10, 10);
+//                    context.fillStyle = "red";
+//                    context.fill();
+
+                });
+                context.closePath();
             }
         });
     </script>
