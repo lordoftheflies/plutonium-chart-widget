@@ -222,19 +222,8 @@ Visualization widget.
                 }
             },
             update: function (data) {
-//                console.debug();
                 this._graph = this._graph.attr('transform', 'translate(0, ' + (this._tick++) + ')');
 
-//                var line = this._graph
-////                        .enter()
-//                        .append('svg:image');
-//                line.attr('xlink:href', this.dataUrl)
-//                        .attr('x', '0')
-//                        .attr('y', '0')
-//                        .attr('width', this._width + 'px')
-//                        .attr('height', 1 + 'px');
-
-//                var canvas = document.getElementById('canvas');
                 var context = this.$.canvas.getContext("2d");
                 var self = this;
 
@@ -247,15 +236,7 @@ Visualization widget.
 
                 context.beginPath();
                 this._data.forEach(function (d, i) {
-
-
-                    console.debug('draw line', d, i);
-
-                    context.drawImage(d, 0, i);
-//                    context.rect(scale(d), 150, 10, 10);
-//                    context.fillStyle = "red";
-//                    context.fill();
-
+                    context.drawImage(d, 0, 0, self.$.canvas.width, d.height, 1, i + 1, d.width, d.height);
                 });
                 context.closePath();
             }
