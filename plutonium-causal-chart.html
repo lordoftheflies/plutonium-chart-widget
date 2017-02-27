@@ -65,6 +65,7 @@ Visualization widget.
         </style>
         <content select=".scale"></content>
         <svg id="svg"></svg>
+        <canvas id="canvas"></canvas>
     </template>
 
     <script>
@@ -195,9 +196,9 @@ Visualization widget.
 ////                legend.exit().remove();
 //
 
-                this._graph = d3.select(this).append('canvas')
+                this._graph = d3.select('canvas')
 //                this._graph = this._g.apped('g').html('<canvas></canvas>')
-                        .attr("id", "imgLines")
+//                        .attr("id", "imgLines")
 //                        .attr()
 //                        .attr('xlink:href', this.dataUrl)
                         .attr('x', '0')
@@ -233,8 +234,8 @@ Visualization widget.
 //                        .attr('width', this._width + 'px')
 //                        .attr('height', 1 + 'px');
 
-                var canvas = document.getElementById('imgLines');
-                var context = canvas.getContext("2d");
+//                var canvas = document.getElementById('canvas');
+                var context = this.$.canvas.getContext("2d");
                 var self = this;
 
                 var img = new Image();
