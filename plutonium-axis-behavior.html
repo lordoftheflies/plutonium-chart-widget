@@ -80,7 +80,7 @@
         },
         observers: [
             '_observeTimeParsePattern(timeParse)',
-//            '_observeVisiblePart(span, center)',
+            '_observeVisiblePart(span, center)',
 //            '_observeOrientation(orientation, _scale)'
         ],
         listeners: {
@@ -172,13 +172,19 @@
 // text label for the x axis
 
 
+            d3.select('#' + this.id + '-axis').remove();
+
 
             details.graphics.append("g")
+                    .attr("id", this.id + "-axis")
                     .attr("class", "axis")
                     .attr("transform", transformationAttribute)
                     .call(this._axis);
 
+            d3.select('#' + this.id + '-axis-label').remove();
+
             details.graphics.append("text")
+                    .attr("id", this.id + "-axis-label")
                     .attr("class", "axis-label")
                     .attr("transform", transformationAttributeForLabel)
                     .style("text-anchor", "middle")
@@ -212,12 +218,14 @@
         _observeVisiblePart: function (span, center) {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe visible parts with center', '=', center, ',', 'span', '=', span);
             if (this.timeParse) {
-//                this._scale = d3.scaleTime().rangeRound([center - span / 2, center + span / 2]);
                 this._ranges = d3.scaleTime().range([center - span / 2, center + span / 2]);
             } else {
                 this._ranges = d3.scaleLinear().range([center - span / 2, center + span / 2]);
-//                this._scale = d3.scaleLinear().rangeRound([center - span / 2, center + span / 2]);
             }
+
+//            d3.select(Polymer.dom(this).parentNode) // change the x axis
+//                    .duration(1000)
+//                    .call(this._axis);
         },
 
         _observeOrientation: function (orientation, _scale) {

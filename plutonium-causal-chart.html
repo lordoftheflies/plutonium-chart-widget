@@ -149,64 +149,12 @@ Visualization widget.
                 var self = this;
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');
 
-//                var zScale = d3.scaleQuantile().domain([
-//                    d3.min(this.data.data, function (d) {
-//                        return d.z;
-//                    }),
-//                    this._colorBucketCount,
-//                    d3.max(this.data.data, function (d) {
-//                        return d.z;
-//                    })
-//                ]).range(this.data.domains.z);
-
-//                var legendElementWidth = this._width / this.data.domains.z.length;
-//                var legendG = this._g.append("g").selectAll(".legend")
-//                        .data([0].concat(zScale.quantiles()), function (d) {
-//                            return d;
-//                        })
-//                        .enter()
-//                        .append("g").attr("class", "legend");
-//
-//                legendG.append("rect")
-//                        .attr("x", function (d, i) {
-//                            return legendElementWidth * i;
-//                        }).attr("y", this._height)
-//                        .attr("width", legendElementWidth).attr("height", this._cellSizeY)
-//                        .style("fill", function (d, i) {
-//                            return self.data.domains.z[i].name;
-//                        });
-//
-//                legendG.append("text")
-//                        .attr("class", "mono")
-//                        .text(function (d) {
-//                            return Math.round(d);
-//                        })
-//                        .attr("x", function (d, i) {
-//                            return legendElementWidth * i;
-//                        })
-//                        .attr("y", this._height + this._cellSizeY + 15);
-//
-//                legendG.append("text").attr("class", "mono").text(d3.max(this.data.data, function (d) {
-//                    return d.z;
-//                }))
-//                        .attr("x", function (d, i) {
-//                            return self._width;
-//                        })
-//                        .attr("y", this._height + this._cellSizeY + 15);
-////                legend.exit().remove();
-//
-
                 this._graph = d3.select('canvas')
-//                this._graph = this._g.apped('g').html('<canvas></canvas>')
-//                        .attr("id", "imgLines")
-//                        .attr()
-//                        .attr('xlink:href', this.dataUrl)
                         .attr('x', '0')
                         .attr('y', '0')
                         .attr("style", "margin-left: " + this._margin.left + "px; margin-top: " + this._margin.top + "px;")
                         .attr('width', this._width + 'px')
-                        .attr('height', this._height + 'px')
-                        ;
+                        .attr('height', this._height + 'px');
 
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'render scales');
                 var distributedScales = this.queryAllEffectiveChildren('.scale');

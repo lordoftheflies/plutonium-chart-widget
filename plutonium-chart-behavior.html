@@ -77,7 +77,7 @@
             }
         },
         _observeLayout: function (viewport, margin) {
-            console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe-lyout', viewport, margin);
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe-layout', viewport, margin);
             this._svg = this._svg.attr('width', this._viewport.width).attr('height', this._viewport.height);
             if (this._g)
                 this._g.remove();
@@ -103,6 +103,9 @@
 //            this.fire('d3-render', {});
 //        },
         _onRender: function (chart, x, y) {
+//            if (this._g)
+//                this._g.remove();
+//            this._g = this._svg.append("g").attr("transform", "translate(" + this._margin.left + "," + this._margin.top + ")");
             this.draw();
         },
 
