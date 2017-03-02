@@ -135,7 +135,7 @@ Visualization widget.
                 img.onload = function () {
                     d3.select('#' + self.id + '-graph').remove();
                     self._graph = self._g.append('image').attr('xlink:href', self.dataUrl)
-                            .attr(self.id + '-graph')
+                            .attr('id', self.id + '-graph')
                             .attr('x', '0')
                             .attr('y', '0')
                             .attr('width', self._width + 'px')
