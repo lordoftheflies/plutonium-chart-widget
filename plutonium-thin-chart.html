@@ -123,7 +123,7 @@ Visualization widget.
             _computeResolution: function (data) {
                 return data.resolution;
             },
-            _observeServerSideData: function (_cellSizeX, _cellSizeY, _g, dataUrl) {
+            _observeServerSideData: function (_g, dataUrl) {
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe-data');
                 this.fire('d3-render', {});
             },
