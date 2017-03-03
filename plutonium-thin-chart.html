@@ -137,11 +137,13 @@ Visualization widget.
 //                        self._g.remove();
 //                    self._g = self._svg.append("g").attr("transform", "translate(" + self._margin.left + "," + self._margin.top + ")");
 
-//                    if (self._graph) {
+                    if (d3.select('#' + self.id + '-graph')) {
                         d3.select('#' + self.id + '-graph').remove();
+                    } else {
+                        self.$.svg.firstElementChild.firstElementChild.remove();
 ////                        d3.select(self._graph).remove();
 //                        
-//                    }
+                    }
                     self._graph = self._g.append('image').attr('xlink:href', self.dataUrl)
                             .attr('id', self.id + '-graph')
                             .attr('x', '0')
