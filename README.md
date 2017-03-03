@@ -1,6 +1,7 @@
-# plutonium-chart-widget
+# Plutonium Visualization 
 
-[![Build Status](https://travis-ci.org/lordoftheflies/plutonium-chart-widget.svg?branch=master)](https://travis-ci.org/lordoftheflies/plutonium-chart-widget)
+[![Build Status](https://travis-ci.org/lordoftheflies/plutonium-chart-widget.svg?branch=master)](https://travis-ci.org/lordoftheflies/plutonium-visualization)
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/lordoftheflies/plutonium-visualization)
 
 Visualization widget.
 

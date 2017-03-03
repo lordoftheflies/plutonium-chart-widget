@@ -57,8 +57,11 @@ Visualization widget.
                 line-height: 20px;
             }
         </style>
+        
+        <svg id="container"></svg>
+        
         <content select=".scale"></content>
-        <svg id="svg"></svg>
+        
     </template>
 
     <script>
@@ -71,22 +74,6 @@ Visualization widget.
                     notify: true
                 },
                 
-                xAxisName: {
-                    type: String,
-                    notify: true
-                },
-                yAxisName: {
-                    type: String,
-                    notify: true
-                },
-                zAxisName: {
-                    type: String,
-                    notify: true
-                },
-                _colorBucketCount: {
-                    type: Number,
-                    computed: '_computeColorBucketCount(data)',
-                },
                 _resolution: {
                     type: Object,
                     computed: '_computeResolution(dataUrl)'
@@ -125,7 +112,7 @@ Visualization widget.
             },
             _observeServerSideData: function (_g, dataUrl) {
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe-data');
-                this.fire('d3-render', {});
+                this.fire('plutonium-render', {});
             },
             draw: function () {
                 var self = this;
@@ -137,14 +124,14 @@ Visualization widget.
 //                        self._g.remove();
 //                    self._g = self._svg.append("g").attr("transform", "translate(" + self._margin.left + "," + self._margin.top + ")");
                     
-                    try {
-//                    if (d3.select('#' + self.id + '-graph')._groups[0][0]) {
-                        d3.select('#' + self.id + '-graph').remove();
-//                    } else {
-                        self.$.svg.firstElementChild.firstElementChild.remove();
-                    } catch (exception) {
-                        console.warn(exception);
-                    }
+//                    try {
+////                    if (d3.select('#' + self.id + '-graph')._groups[0][0]) {
+//                        d3.select('#' + self.id + '-graph').remove();
+////                    } else {
+//                        self.$.svg.firstElementChild.firstElementChild.remove();
+//                    } catch (exception) {
+//                        console.warn(exception);
+//                    }
                     
 ////                        d3.select(self._graph).remove();
 //                        

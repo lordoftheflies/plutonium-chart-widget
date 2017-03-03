@@ -35,39 +35,29 @@
             _height: {
                 type: Number,
                 computed: '_computeContentHeight(_viewport.height, _margin.top, _margin.bottom)'
-            },
-            data: {
-                type: Object,
-                notify: true
-            },
-            verticalAlign: 'top',
-            horizontalAlign: 'auto',
-            autoFitOnAttach: true
+            }
         },
         observers: [
-            '_observeLayout(_viewport, _margin)',
-//            '_observeData(_g, data)'
+            '_observeLayout(_viewport, _margin)'
         ],
         listeners: {
-            'iron-resize': '_onResizeSvg',
-            'd3-render': '_onRender'
+            'iron-resize': '_onResize',
+            'plutonium-render': '_onRender'
         },
         created: function () {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'created');
-
         },
         ready: function () {
-            this._svg = d3.select(this.$.svg);
+            this._svg = d3.select(this.$.container);
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'ready');
         },
         attached: function () {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'attached');
-
         },
         detached: function () {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'detached');
         },
-        _onResizeSvg: function (event, details) {
+        _onResize: function (event, details) {
             if (this.offsetWidth > 0 && this.offsetHeight > 0) {
                 this._viewport = {
                     width: this.offsetWidth,
@@ -78,42 +68,21 @@
         },
         _observeLayout: function (viewport, margin) {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe-layout', viewport, margin);
+            this._svg.remove();
             this._svg = this._svg.attr('width', this._viewport.width).attr('height', this._viewport.height);
-            if (this._g)
-                this._g.remove();
             this._g = this._svg.append("g").attr("transform", "translate(" + this._margin.left + "," + this._margin.top + ")");
         },
-//        _observeData: function (g, data) {
-////            if (Object.is(data)) {
-//            console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe-data', data);
-////            this.initialize();
-////            }
-//        },
-
         _computeContentWidth: function (viewportWidth, marginLeft, marginRight) {
             return viewportWidth - marginLeft - marginRight;
         },
         _computeContentHeight: function (viewportHeight, marginTop, marginBottom) {
             return viewportHeight - marginTop - marginBottom;
         },
-
-//        _observeInit: function (chart, x, y) {
-//            if (!this._chart)
-//            this.initialize();
-//            this.fire('d3-render', {});
-//        },
         _onRender: function (chart, x, y) {
-//            if (this._g)
-//                this._g.remove();
-//            this._g = this._svg.append("g").attr("transform", "translate(" + this._margin.left + "," + this._margin.top + ")");
             this.draw();
         },
-
-        initialize: function () {
-            console.debug((this.id ? this.is + '#' + this.id : this.is), 'initialize');
-        },
         draw: function () {
-            console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw should be overridden');
         }
     };
     /**
