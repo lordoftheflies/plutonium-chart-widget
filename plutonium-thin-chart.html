@@ -70,7 +70,7 @@ Visualization widget.
                     type: String,
                     notify: true
                 },
-
+                
                 xAxisName: {
                     type: String,
                     notify: true
@@ -110,7 +110,7 @@ Visualization widget.
             observers: [
                 '_observeServerSideData(_g, dataUrl)'
             ],
-
+            
             _computeColorBucketCount: function (data) {
                 return (data.domains.z.length && data.domains.z.length > 0) ? data.domains.z.length - 1 : 0;
             },
@@ -136,14 +136,19 @@ Visualization widget.
 //                    if (self._g)
 //                        self._g.remove();
 //                    self._g = self._svg.append("g").attr("transform", "translate(" + self._margin.left + "," + self._margin.top + ")");
-
-                    if (d3.select('#' + self.id + '-graph')) {
+                    
+                    try {
+//                    if (d3.select('#' + self.id + '-graph')._groups[0][0]) {
                         d3.select('#' + self.id + '-graph').remove();
-                    } else {
+//                    } else {
                         self.$.svg.firstElementChild.firstElementChild.remove();
+                    } catch (exception) {
+                        console.warn(exception);
+                    }
+                    
 ////                        d3.select(self._graph).remove();
 //                        
-                    }
+//                    }
                     self._graph = self._g.append('image').attr('xlink:href', self.dataUrl)
                             .attr('id', self.id + '-graph')
                             .attr('x', '0')
@@ -163,8 +168,8 @@ Visualization widget.
                         });
                     }
                 };
-
-
+                
+                
 //                // TODO: separate component
 //                this._xAxis = this._g.append("g")
 //                        .selectAll(".rowLabelg")
@@ -211,9 +216,9 @@ Visualization widget.
 //                        .attr('xlink:href', this.dataUrl);
                 // Select the section we want to apply our changes to
 //                this._svg = d3.select(this).transition();
-
-
-
+                
+                
+                
 //                // Scale the range of the data again 
 //                var distributedScales = this.queryAllEffectiveChildren('.scale');
 //                for (var index in distributedScales) {
