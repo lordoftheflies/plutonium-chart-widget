@@ -195,10 +195,13 @@ Visualization widget.
 ////                    distributedScales[index].scale(this._svg);
 //                }
                 var self = this;
+                var selection = d3.select('image#' + self.id + 'Graph');
                 var img = new Image();
                 img.src = this.dataUrl;
                 img.onload = function () {
-                    d3.select('image#' + self.id + 'Graph').remove();
+                    selection.remove();
+//                    self._graph.remove();
+
                     self.fire('plutonium-render', {});
 //                    if (self._g)
 //                        self._g.remove();
