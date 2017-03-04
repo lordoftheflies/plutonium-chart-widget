@@ -139,14 +139,20 @@ Visualization widget.
             },
             update: function () {
                 var self = this;
-                var selection = d3.select('image#' + self.id + 'Graph');
+//                var selection = d3.select('image#' + self.id + 'Graph');
                 var img = new Image();
                 img.src = this.dataUrl;
                 img.onload = function () {
-                    selection.remove();
+                    try {
+                        self.$$('image#' + self.id + 'Graph').remove();
+                    } catch (exception) {
+                        d3.select('image#' + self.id + 'Graph').remove();
+                    }
                     self.fire('plutonium-render', {});
+//                    
+
                 };
-                
+
             }
         });
     </script>
