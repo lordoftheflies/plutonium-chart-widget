@@ -66,6 +66,8 @@ Visualization widget.
             canvas {
                 margin-left: var(--margin-left, 0px);
                 margin-top: var(--margin-top, 0px);
+                width: var(--width);
+                height: var(--height);
             }
             
         </style>
@@ -166,6 +168,8 @@ Visualization widget.
                 this.$.canvas.height = this._height;
                 this.customStyle['--margin-left'] = this._margin.left + 'px !important';
                 this.customStyle['--margin-top'] = this._margin.top + 'px !important';
+                this.customStyle['--width'] = this._width + 'px !important';
+                this.customStyle['--height'] = this._height + 'px !important';
                 this.updateStyles();
                 this._graph = d3.select('canvas');
 //                this._graph
