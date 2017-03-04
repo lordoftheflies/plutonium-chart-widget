@@ -4,14 +4,13 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-        <title>plutonium-waterfall-chart demo</title>
+        <title>plutonium-thin-chart demo</title>
 
         <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
         <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
         <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-        <link rel="import" href="../../plutonium-websocket/plutonium-websocket.html">
-        <link rel="import" href="../plutonium-chart-widget.html">
+        <link rel="import" href="../plutonium-visualization.html">
 
         <style is="custom-style" include="demo-pages-shared-styles">
         </style>
@@ -19,19 +18,11 @@
     <body>
         <div class="vertical-section-container centered">
 
-
-
-
-            <h3>Basic plutonium-waterfall-chart demo</h3>
-
-
-
+            <h3>plutonium-thin-chart demo</h3>
 
             <demo-snippet>
                 <template>
                     <button id="updateButton">Update</button>
-                    <!--<plindex-thin-chartutonium-websocket id="dataWs" url="ws://localhost:9006/data" as-json auto-close></plutonium-websocket>-->
-                    <!--<plutonium-websocket id="dataWs" url="ws://localhost:8080/hedgehog-visualization-ms-0.0.1-SNAPSHOT/data" as-json auto-close></plutonium-websocket>-->
                     <div id="chart1" 
                          is="plutonium-thin-chart" 
                          data-url="http://localhost:9006/live/agilent_hp_8920B/trace/image?amplitude_reference=0.0&amplitude_span=100.0&frequency_span=40.0&frequency_center=100.0&width=600&height=400&pixel_width=1&pixel_height=1&opacity=233&ver=1488490247813"
@@ -92,19 +83,6 @@
                             console.log('Update waterfall');
                             chart1.dataUrl = "http://localhost:9006/live/agilent_hp_8920B/trace/image?amplitude_reference=0.0&amplitude_span=100.0&frequency_span=40.0&frequency_center=100.0&width=600&height=400&pixel_width=1&pixel_height=1&opacity=233&ver=" + Date.now();
                         });
-
-//                        var wsElement = document.querySelector("plutonium-websocket");
-//                        wsElement.addEventListener('ws-error', function (error) {
-//                            console.log('Ws throw error');
-//                            throw new Error(error);
-//                        });
-//                        wsElement.addEventListener('ws-open', function () {
-//                            console.log('Ws send');
-//                        });
-//                        wsElement.addEventListener('ws-message', function (message) {
-//                            console.log('Ws message');
-//                            chart1.update(message.detail);
-//                        });
                     </script>
                 </template>
 
@@ -115,16 +93,16 @@
 
 
 
-            <demo-snippet>
+<!--            <demo-snippet>
                 <template is="dom-bind">
-                    <!--<template>-->
+                    <template>
                     <plutonium-datasource source-url="./waterfall.json" source-type="json" last-data="{{waterfallData}}"></plutonium-datasource>
                     <div id="chart0" is="plutonium-waterfall-chart" data="[[waterfallData]]"></div>
 
 
                 </template>
 
-            </demo-snippet>
+            </demo-snippet>-->
 
 
 

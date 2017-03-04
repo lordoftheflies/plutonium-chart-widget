@@ -1,18 +1,16 @@
 {
-  "name": "plutonium-chart-widget",
-  "description": "Visualization widget.",
-  "main": "plutonium-chart-widget.html",
+  "name": "plutonium-visualization",
+  "description": "Visualization library for integrate Polymer with D3 and add SVG support.",
+  "main": "plutonium-visualization.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^1.4.0",
     "d3": "^4.3.0",
-    "iron-fit-behavior": "polymerelements/iron-fit-behavior#^1.2.5",
     "iron-resizable-behavior": "polymerelements/iron-resizable-behavior#^1.0.5"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
     "web-component-tester": "^4.0.0",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0",
-    "plutonium-websocket": "lordoftheflies/plutonium-websocket"
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   }
 }
