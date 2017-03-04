@@ -117,10 +117,8 @@ Visualization widget.
             draw: function () {
                 var self = this;
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');
-                
 
-
-                self._graph = self._g.append('image').attr('xlink:href', self.dataUrl)
+                self._graph = self._g.append('svg:image').attr('xlink:href', self.dataUrl)
                         .attr('id', self.id + 'Graph')
                         .attr('x', '0')
                         .attr('y', '0')
@@ -138,88 +136,15 @@ Visualization widget.
                         margin: self._margin
                     });
                 }
-
-//                // TODO: separate component
-//                this._xAxis = this._g.append("g")
-//                        .selectAll(".rowLabelg")
-//                        .data(this.data.domains.x)
-//                        .enter()
-//                        .append("text")
-//                        .attr("font-size", (self._cellSizeY - 1) + "px")
-//                        .text(function (d) {
-//                            return d.name;
-//                        })
-//                        .attr("x", 0)
-//                        .attr("y", function (d, i) {
-//                            return self._cellSizeY * i;
-//                        })
-//                        .style("text-anchor", "end")
-//                        .attr("transform", "translate(-6," + (self._cellSizeY / 1.5 + 2) + ")")
-//                        .attr("class", function (d, i) {
-//                            return "rowLabel mono r" + i;
-//                        });
-//
-//                this._yAxis = this._g.append("g")
-//                        .selectAll(".colLabelg")
-//                        .data(this.data.domains.y)
-//                        .enter()
-//                        .append("text")
-//                        .attr("font-size", (self._cellSizeX - 1) + "px")
-//                        .text(function (d) {
-//                            return d.name;
-//                        })
-//                        .attr("x", 0)
-//                        .attr("y", function (d, i) {
-//                            return self._cellSizeX * i;
-//                        })
-//                        .style("text-anchor", "left")
-//                        .attr("transform", "translate(" + (self._cellSizeX / 1.5 + 2) + ",-6) rotate (-90)")
-//                        .attr("class", function (d, i) {
-//                            return "colLabel mono c" + i;
-//                        });
             },
-            update: function (data) {
-//                console.debug();
-//                this._graph = d3.select(this._graph).transition()
-//                        .duration(750)
-//                        .attr('xlink:href', this.dataUrl);
-                // Select the section we want to apply our changes to
-//                this._svg = d3.select(this).transition();
-
-
-
-//                // Scale the range of the data again 
-//                var distributedScales = this.queryAllEffectiveChildren('.scale');
-//                for (var index in distributedScales) {
-//                    console.debug('- ', (distributedScales[index].id ? distributedScales[index].is + '#' + distributedScales[index].id : distributedScales[index].is));
-////                    distributedScales[index].scale(this._svg);
-//                }
+            update: function () {
                 var self = this;
                 var selection = d3.select('image#' + self.id + 'Graph');
                 var img = new Image();
                 img.src = this.dataUrl;
                 img.onload = function () {
                     selection.remove();
-//                    self._graph.remove();
-
                     self.fire('plutonium-render', {});
-//                    if (self._g)
-//                        self._g.remove();
-//                    self._g = self._svg.append("g").attr("transform", "translate(" + self._margin.left + "," + self._margin.top + ")");
-
-//                    try {
-////                    if (d3.select('#' + self.id + '-graph')._groups[0][0]) {
-//                        d3.select('#' + self.id + '-graph').remove();
-////                    } else {
-//                        self.$.svg.firstElementChild.firstElementChild.remove();
-//                    } catch (exception) {
-//                        console.warn(exception);
-//                    }
-
-////                        d3.select(self._graph).remove();
-//                        
-//                    }
-
                 };
                 
             }
