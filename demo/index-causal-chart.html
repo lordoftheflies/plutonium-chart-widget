@@ -83,23 +83,24 @@
                         var axis2 = document.querySelector('#zAxis');
                         var axis3 = document.querySelector('#aAxis');
                         updateButton.addEventListener('click', function () {
-                        console.log('Update heatmap');
-                                chart1.dataUrl = "http://localhost:9006/live/agilent_hp_8920B/trace/heatmap?amplitude_reference=0.0&amplitude_span=100.0&frequency_span=40.0&frequency_center=100.0&width=600&height=400&pixel_width=1&pixel_height=1&opacity=233&ver=" + Date.now()
-                                axis0.center = axis0.center + 1;
-                                axis1.center = axis1.center + 1;
-                                axis2.center = axis2.center + 1;
-                                axis3.center = axis3.center + 1;
+                            console.log('Update heatmap');
+                            chart1.dataUrl = "http://localhost:9006/live/agilent_hp_8920B/trace/heatmap?amplitude_reference=0.0&amplitude_span=100.0&frequency_span=40.0&frequency_center=100.0&width=600&height=400&pixel_width=1&pixel_height=1&opacity=233&ver=" + Date.now()
+                            axis0.center = axis0.center + 1;
+                            axis1.center = axis1.center + 1;
+                            axis2.center = axis2.center + 1;
+                            axis3.center = axis3.center + 1;
+                        });
                     </script>
                 </template>
 
             </demo-snippet>
 
-<!--            <demo-snippet>
-                <template is="dom-bind">
-                    <plutonium-datasource source-url="./waterfall.json" source-type="json" last-data="{{waterfallData}}"></plutonium-datasource>
-                    <div id="chart0" is="plutonium-causal-chart" data="[[waterfallData]]"></div>
-                </template>
-            </demo-snippet>-->
+            <!--            <demo-snippet>
+                            <template is="dom-bind">
+                                <plutonium-datasource source-url="./waterfall.json" source-type="json" last-data="{{waterfallData}}"></plutonium-datasource>
+                                <div id="chart0" is="plutonium-causal-chart" data="[[waterfallData]]"></div>
+                            </template>
+                        </demo-snippet>-->
 
         </div>
     </body>
