@@ -147,8 +147,15 @@ Visualization widget.
             },
             initialize: function () {
                 this._g = this._svg.append("g").attr("transform", "translate(" + this._margin.left + "," + this._margin.top + ")");
-        
+
+                try {
+                    this.$$('canvas#' + this.id + 'Graph').remove();
+                } catch (exception) {
+                    d3.select('canvas#' + this.id + 'Graph').remove();
+                }
+
                 this._graph = d3.select('canvas')
+                        .attr('id', this.id + 'Graph')
                         .attr("style", "margin-left: " + this._margin.left + "px !important; margin-top: " + this._margin.top + "px !important;")
                         .attr('width', this._width + 'px')
                         .attr('height', this._height + 'px');
@@ -157,12 +164,12 @@ Visualization widget.
                 var self = this;
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');
 
-                self._graph = d3.select('canvas')
-//                        .attr('x', self._margin.left)
-//                        .attr('y', self._margin.top)
-                        .attr("style", "margin-left: " + self._margin.left + "px !important; margin-top: " + self._margin.top + "px !important;")
-                        .attr('width', self._width + 'px')
-                        .attr('height', self._height + 'px');
+//                self._graph = d3.select('canvas')
+////                        .attr('x', self._margin.left)
+////                        .attr('y', self._margin.top)
+//                        .attr("style", "margin-left: " + self._margin.left + "px !important; margin-top: " + self._margin.top + "px !important;")
+//                        .attr('width', self._width + 'px')
+//                        .attr('height', self._height + 'px');
 
                 self._graph = self._graph.attr('transform', 'translate(0, ' + (self._tick++) + ')');
 
