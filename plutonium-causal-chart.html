@@ -150,9 +150,9 @@ Visualization widget.
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');
 
                 self._graph = d3.select('canvas')
-                        .attr('x', '0')
-                        .attr('y', '0')
-                        .attr("style", "margin-left: " + self._margin.left + "px; margin-top: " + self._margin.top + "px;")
+//                        .attr('x', self._margin.left)
+//                        .attr('y', self._margin.top)
+                        .attr("style", "margin-left: " + self._margin.left + "px !important; margin-top: " + self._margin.top + "px !important;")
                         .attr('width', self._width + 'px')
                         .attr('height', self._height + 'px');
 
