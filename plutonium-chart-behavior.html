@@ -65,6 +65,7 @@
                 };
                 console.log((this.id ? this.is + '#' + this.id : this.is), 'resized to', this._viewport);
             }
+            this.draw();
         },
         _observeLayout: function (viewport, margin) {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe-layout', viewport, margin);
