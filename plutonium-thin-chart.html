@@ -121,7 +121,7 @@ Visualization widget.
 
 
                 self._graph = self._g.append('image').attr('xlink:href', self.dataUrl)
-                        .attr('id', self.id + '-graph')
+                        .attr('id', self.id + 'Graph')
                         .attr('x', '0')
                         .attr('y', '0')
                         .attr('width', self._width + 'px')
@@ -198,7 +198,7 @@ Visualization widget.
                 var img = new Image();
                 img.src = this.dataUrl;
                 img.onload = function () {
-                    d3.select('image').remove();
+                    d3.select('image#' + self.id + 'Graph').remove();
                     self.fire('plutonium-render', {});
 //                    if (self._g)
 //                        self._g.remove();
