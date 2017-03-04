@@ -114,6 +114,10 @@ Visualization widget.
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe-data');
                 this.update();
             },
+
+            initialize: function () {
+                this._g = this._svg.append("g").attr("transform", "translate(" + this._margin.left + "," + this._margin.top + ")");
+            },
             draw: function () {
                 var self = this;
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');

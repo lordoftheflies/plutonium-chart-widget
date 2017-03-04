@@ -145,6 +145,14 @@ Visualization widget.
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe-data');
                 this.update();
             },
+            initialize: function () {
+                this._g = this._svg.append("g").attr("transform", "translate(" + this._margin.left + "," + this._margin.top + ")");
+        
+                this._graph = d3.select('canvas')
+                        .attr("style", "margin-left: " + this._margin.left + "px !important; margin-top: " + this._margin.top + "px !important;")
+                        .attr('width', this._width + 'px')
+                        .attr('height', this._height + 'px');
+            },
             draw: function () {
                 var self = this;
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');
