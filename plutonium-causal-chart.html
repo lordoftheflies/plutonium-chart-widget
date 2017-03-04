@@ -186,6 +186,7 @@ Visualization widget.
                 img.onload = function () {
                     self._data.push(img);
                     console.debug('add new line', self._data);
+                    self._onRender();
                 };
             }
         });

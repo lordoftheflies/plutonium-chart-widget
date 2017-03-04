@@ -148,7 +148,7 @@ Visualization widget.
                     } catch (exception) {
                         d3.select('image#' + self.id + 'Graph').remove();
                     }
-                    self.fire('plutonium-render', {});
+                    self._onRender();
 //                    
 
                 };
