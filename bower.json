@@ -1,6 +1,9 @@
 {
   "name": "plutonium-visualization",
   "description": "Visualization library for integrate Polymer with D3 and add SVG support.",
+  "authors": [
+    "lordoftheflies <laszlo.hegedus@cherubits.hu>"
+  ],
   "main": "plutonium-visualization.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^1.4.0",
