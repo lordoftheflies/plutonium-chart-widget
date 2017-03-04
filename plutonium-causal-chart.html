@@ -62,6 +62,12 @@ Visualization widget.
                 font-size: 12px;
                 line-height: 20px;
             }
+            
+            canvas {
+                margin-left: --margin-left;
+                margin-top: --margin-top;
+            }
+            
         </style>
         <content select=".scale"></content>
         <svg id="container"></svg>
@@ -148,17 +154,25 @@ Visualization widget.
             initialize: function () {
                 this._g = this._svg.append("g").attr("transform", "translate(" + this._margin.left + "," + this._margin.top + ")");
 
-                try {
-                    this.$$('canvas#' + this.id + 'Graph').remove();
-                } catch (exception) {
-                    d3.select('canvas#' + this.id + 'Graph').remove();
-                }
+//                try {
+//                    this._graph = this.$$('canvas#' + this.id + 'Graph');
+////                    this.$$('canvas#' + this.id + 'Graph').remove();
+//                } catch (exception) {
+//                    d3.select('canvas#' + this.id + 'Graph').remove();
 
-                this._graph = d3.select('canvas')
-                        .attr('id', this.id + 'Graph')
-                        .attr("style", "margin-left: " + this._margin.left + "px !important; margin-top: " + this._margin.top + "px !important;")
-                        .attr('width', this._width + 'px')
-                        .attr('height', this._height + 'px');
+//                this._graph = d3.select('canvas');
+//                }
+                this.$.canvas.width = this._width;
+                this.$.canvas.height = this._height;
+                this.customStyle['--margin-left'] = this._margin.left + 'px !important';
+                this.customStyle['--margin-top'] = this._margin.top + 'px !important';
+                this.updateStyles();
+                this._graph = d3.select('canvas');
+//                this._graph
+//                        .attr('id', this.id + 'Graph')
+//                        .attr("style", "margin-left: " + this._margin.left + "px !important; margin-top: " + this._margin.top + "px !important;")
+//                        .attr('width', this._width + 'px')
+//                        .attr('height', this._height + 'px');
             },
             draw: function () {
                 var self = this;
