@@ -56,12 +56,21 @@ Visualization widget.
                 font-size: 12px;
                 line-height: 20px;
             }
+            
+            #container {
+                position: absolute;
+            }
+            
+            canvas {
+                margin-left: var(--margin-left, 0px);
+                margin-top: var(--margin-top, 0px);
+                width: var(--width);
+                height: var(--height);
+            }
         </style>
-
-        <svg id="container"></svg>
-
         <content select=".scale"></content>
-
+        <svg id="container"></svg>
+        <canvas id="canvas" />
     </template>
 
     <script>
@@ -117,17 +126,38 @@ Visualization widget.
 
             initialize: function () {
                 this._g = this._svg.append("g").attr("transform", "translate(" + this._margin.left + "," + this._margin.top + ")");
+
+                this.$.canvas.width = this._width;
+                this.$.canvas.height = this._height;
+                this.customStyle['--margin-left'] = this._margin.left + 'px !important';
+                this.customStyle['--margin-top'] = this._margin.top + 'px !important';
+                this.customStyle['--width'] = this._width + 'px !important';
+                this.customStyle['--height'] = this._height + 'px !important';
+                this.updateStyles();
+                this._graph = d3.select('canvas');
             },
             draw: function () {
-                var self = this;
+                 var self = this;
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');
 
-                self._graph = self._g.append('svg:image').attr('xlink:href', self.dataUrl)
-                        .attr('id', self.id + 'Graph')
-                        .attr('x', '0')
-                        .attr('y', '0')
-                        .attr('width', self._width + 'px')
-                        .attr('height', self._height + 'px');
+//                self._graph = d3.select('canvas')
+////                        .attr('x', self._margin.left)
+////                        .attr('y', self._margin.top)
+//                        .attr("style", "margin-left: " + self._margin.left + "px !important; margin-top: " + self._margin.top + "px !important;")
+//                        .attr('width', self._width + 'px')
+//                        .attr('height', self._height + 'px');
+
+//                self._graph = self._graph.attr('transform', 'translate(0, ' + (self._tick++) + ')')
+self._graph = self._graph.attr('transform', 'translate(0, 0)');
+
+                var context = self.$.canvas.getContext("2d");
+                context.clearRect(0, 0, self._data.width, self._data.height);
+                context.beginPath();
+//                self._data.forEach(function (d, i) {
+                    context.drawImage(self._data, 0, 0, self._data.width, self._data.height, 0, 0, self._data.width, self._data.height);
+//                });
+                context.closePath();
+
                 console.debug((self.id ? self.is + '#' + self.id : self.is), 'render scales');
                 var distributedScales = self.queryAllEffectiveChildren('.scale');
                 for (var index in distributedScales) {
@@ -140,22 +170,53 @@ Visualization widget.
                         margin: self._margin
                     });
                 }
+                
+//                var self = this;
+//                console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');
+
+//                self._graph = self._g.append('svg:image').attr('xlink:href', self.dataUrl)
+//                        .attr('id', self.id + 'Graph')
+//                        .attr('x', '0')
+//                        .attr('y', '0')
+//                        .attr('width', self._width + 'px')
+//                        .attr('height', self._height + 'px');
+//                console.debug((self.id ? self.is + '#' + self.id : self.is), 'render scales');
+//                var distributedScales = self.queryAllEffectiveChildren('.scale');
+//                for (var index in distributedScales) {
+//                    console.debug('- ', (distributedScales[index].id ? distributedScales[index].is + '#' + distributedScales[index].id : distributedScales[index].is));
+//                    distributedScales[index].fire('d3-update', {
+//                        graphics: self._g,
+//                        container: self._svg,
+//                        width: self._width,
+//                        height: self._height,
+//                        margin: self._margin
+//                    });
+//                }
             },
             update: function () {
                 var self = this;
-//                var selection = d3.select('image#' + self.id + 'Graph');
                 var img = new Image();
                 img.src = this.dataUrl;
                 img.onload = function () {
-                    try {
-                        self.$$('image#' + self.id + 'Graph').remove();
-                    } catch (exception) {
-                        d3.select('image#' + self.id + 'Graph').remove();
-                    }
+                    self._data = img;
+                    console.debug('update', self._data);
                     self._onRender();
-//                    
-
                 };
+                
+//                var self = this;
+////                var selection = d3.select('image#' + self.id + 'Graph');
+//                var img = new Image();
+//                img.src = this.dataUrl;
+//                img.onload = function () {
+//                    try {
+//                        self.$$('image#' + self.id + 'Graph').remove();
+//                    } catch (exception) {
+//                        d3.select('image#' + self.id + 'Graph').remove();
+//                    }
+//                    self._onRender();
+////                    
+//
+//                };
 
             }
         });
