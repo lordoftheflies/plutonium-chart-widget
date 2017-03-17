@@ -212,6 +212,20 @@ Visualization widget.
                 }
 
             },
+            refresh: function (input) {
+                var blob = new Blob([input], {type: 'image/png'});
+                var url = URL.createObjectURL(blob);
+                var img = new Image;
+
+                var self = this;
+                img.onload = function () {
+                    self._data.push(img);
+                    console.debug((self.id ? self.is + '#' + self.id : self.is),'refresh delta', img);
+                    self._onRender();
+                    URL.revokeObjectURL(url);
+                }
+                img.src = url
+            },
             update: function (data) {
                 var self = this;
                 var img = new Image();

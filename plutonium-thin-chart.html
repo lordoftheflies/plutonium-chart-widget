@@ -56,11 +56,11 @@ Visualization widget.
                 font-size: 12px;
                 line-height: 20px;
             }
-            
+
             #container {
                 position: absolute;
             }
-            
+
             canvas {
                 margin-left: var(--margin-left, 0px);
                 margin-top: var(--margin-top, 0px);
@@ -137,7 +137,7 @@ Visualization widget.
                 this._graph = d3.select('canvas');
             },
             draw: function () {
-                 var self = this;
+                var self = this;
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');
 
 //                self._graph = d3.select('canvas')
@@ -148,13 +148,13 @@ Visualization widget.
 //                        .attr('height', self._height + 'px');
 
 //                self._graph = self._graph.attr('transform', 'translate(0, ' + (self._tick++) + ')')
-self._graph = self._graph.attr('transform', 'translate(0, 0)');
+                self._graph = self._graph.attr('transform', 'translate(0, 0)');
 
                 var context = self.$.canvas.getContext("2d");
                 context.clearRect(0, 0, self._data.width, self._data.height);
                 context.beginPath();
 //                self._data.forEach(function (d, i) {
-                    context.drawImage(self._data, 0, 0, self._data.width, self._data.height, 0, 0, self._data.width, self._data.height);
+                context.drawImage(self._data, 0, 0, self._data.width, self._data.height, 0, 0, self._data.width, self._data.height);
 //                });
                 context.closePath();
 
@@ -170,7 +170,7 @@ self._graph = self._graph.attr('transform', 'translate(0, 0)');
                         margin: self._margin
                     });
                 }
-                
+
 //                var self = this;
 //                console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');
 
@@ -193,6 +193,20 @@ self._graph = self._graph.attr('transform', 'translate(0, 0)');
 //                    });
 //                }
             },
+            refresh: function (input) {
+                var blob = new Blob([input], {type: 'image/png'});
+                var url = URL.createObjectURL(blob);
+                var img = new Image;
+
+                var self = this;
+                img.onload = function () {
+                    self._data = img;
+                    console.debug((self.id ? self.is + '#' + self.id : self.is), 'refresh', self._data);
+                    self._onRender();
+                    URL.revokeObjectURL(url);
+                }
+                img.src = url
+            },
             update: function () {
                 var self = this;
                 var img = new Image();
@@ -202,7 +216,7 @@ self._graph = self._graph.attr('transform', 'translate(0, 0)');
                     console.debug('update', self._data);
                     self._onRender();
                 };
-                
+
 //                var self = this;
 ////                var selection = d3.select('image#' + self.id + 'Graph');
 //                var img = new Image();
