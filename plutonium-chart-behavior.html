@@ -38,7 +38,8 @@
             }
         },
         observers: [
-            '_observeLayout(_viewport, _margin)'
+            '_observeLayout(_viewport, _margin)',
+            '_observerContentArea(_width, _height)'
         ],
         listeners: {
             'iron-resize': '_onResize',
@@ -65,7 +66,7 @@
                 };
                 console.log((this.id ? this.is + '#' + this.id : this.is), 'resized to', this._viewport);
             }
-            
+
             this.draw();
         },
         _observeLayout: function (viewport, margin) {
@@ -74,10 +75,13 @@
             if (this._g)
                 this._g.remove();
             this.initialize();
+
+        },
+        _observerContentArea: function (width, height) {
             this.fire('plutonium-chart-resize', {
                 id: this.id,
-                width: this._width,
-                height: this._height
+                width: width,
+                height: height
             });
         },
         _computeContentWidth: function (viewportWidth, marginLeft, marginRight) {
