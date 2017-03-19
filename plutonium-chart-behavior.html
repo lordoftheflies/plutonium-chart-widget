@@ -65,6 +65,7 @@
                 };
                 console.log((this.id ? this.is + '#' + this.id : this.is), 'resized to', this._viewport);
             }
+            
             this.draw();
         },
         _observeLayout: function (viewport, margin) {
@@ -73,6 +74,11 @@
             if (this._g)
                 this._g.remove();
             this.initialize();
+            this.fire('plutonium-chart-resize', {
+                id: this.id,
+                width: this._width,
+                height: this._height
+            });
         },
         _computeContentWidth: function (viewportWidth, marginLeft, marginRight) {
             return viewportWidth - marginLeft - marginRight;
