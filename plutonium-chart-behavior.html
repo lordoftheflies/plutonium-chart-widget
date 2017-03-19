@@ -30,16 +30,18 @@
             },
             _width: {
                 type: Number,
-                computed: '_computeContentWidth(_viewport.width, _margin.left, _margin.right)'
+                notify: true
             },
             _height: {
                 type: Number,
-                computed: '_computeContentHeight(_viewport.height, _margin.top, _margin.bottom)'
+                notify: true
             }
         },
         observers: [
             '_observeLayout(_viewport, _margin)',
-            '_observerContentArea(_width, _height)'
+            '_observerContentArea(_width, _height)',
+            '_computeContentWidth(_viewport.width, _margin.left, _margin.right)',
+            '_computeContentHeight(_viewport.height, _margin.top, _margin.bottom)'
         ],
         listeners: {
             'iron-resize': '_onResize',
@@ -85,10 +87,10 @@
             });
         },
         _computeContentWidth: function (viewportWidth, marginLeft, marginRight) {
-            return viewportWidth - marginLeft - marginRight;
+            this._width = viewportWidth - marginLeft - marginRight;
         },
         _computeContentHeight: function (viewportHeight, marginTop, marginBottom) {
-            return viewportHeight - marginTop - marginBottom;
+            this._height =  viewportHeight - marginTop - marginBottom;
         },
         _onRender: function (chart, x, y) {
             this.draw();
