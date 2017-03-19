@@ -85,12 +85,14 @@
                 width: width,
                 height: height
             });
+            this.$.canvas.width = width;
+            this.$.canvas.height = height;
         },
         _computeContentWidth: function (viewportWidth, marginLeft, marginRight) {
             this._width = viewportWidth - marginLeft - marginRight;
         },
         _computeContentHeight: function (viewportHeight, marginTop, marginBottom) {
-            this._height =  viewportHeight - marginTop - marginBottom;
+            this._height = viewportHeight - marginTop - marginBottom;
         },
         _onRender: function (chart, x, y) {
             this.draw();
