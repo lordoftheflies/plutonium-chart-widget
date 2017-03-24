@@ -164,8 +164,8 @@
                     transformationAttributeForLabel = "translate(" + (details.width / 2) + " ," + (details.height + 10 + details.margin.top) + ")";
                     break;
                 default:
-                    console.error(this.is, 'orientation value is invalid:', this.orientation);
-                    break;
+                    console.warn((this.id ? this.is + '#' + this.id : this.is), 'orientation value is invalid:', this.orientation);
+                    return;
             }
 
 
@@ -245,8 +245,8 @@
                     this._axis = d3.axisBottom(_scale);
                     break;
                 default:
-                    console.error(this.is, 'orientation value is invalid:', orientation);
-                    break;
+                    console.warn((this.id ? this.is + '#' + this.id : this.is), 'orientation value is invalid:', this.orientation);
+                    return;
             }
         }
     };
