@@ -35,6 +35,11 @@
             _height: {
                 type: Number,
                 notify: true
+            },
+            loading: {
+                type: Boolean,
+                notify: true,
+                value: false
             }
         },
         observers: [
@@ -96,6 +101,8 @@
         },
         _onRender: function (chart, x, y) {
             this.draw();
+            
+            this.loading = false;
         },
         draw: function () {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw should be overridden');

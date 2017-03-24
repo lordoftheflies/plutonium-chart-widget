@@ -137,6 +137,8 @@ Visualization widget.
                 this._graph = d3.select('canvas');
             },
             draw: function () {
+
+
                 var self = this;
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');
 
@@ -150,13 +152,15 @@ Visualization widget.
 //                self._graph = self._graph.attr('transform', 'translate(0, ' + (self._tick++) + ')')
                 self._graph = self._graph.attr('transform', 'translate(0, 0)');
 
-                var context = self.$.canvas.getContext("2d");
-                context.clearRect(0, 0, self._data.width, self._data.height);
-                context.beginPath();
+                if (this._data) {
+                    var context = self.$.canvas.getContext("2d");
+                    context.clearRect(0, 0, self._data.width, self._data.height);
+                    context.beginPath();
 //                self._data.forEach(function (d, i) {
-                context.drawImage(self._data, 0, 0, self._data.width, self._data.height, 0, 0, self._data.width, self._data.height);
+                    context.drawImage(self._data, 0, 0, self._data.width, self._data.height, 0, 0, self._data.width, self._data.height);
 //                });
-                context.closePath();
+                    context.closePath();
+                }
 
                 console.debug((self.id ? self.is + '#' + self.id : self.is), 'render scales');
                 var distributedScales = self.queryAllEffectiveChildren('.scale');
@@ -211,6 +215,7 @@ Visualization widget.
                 var self = this;
                 var img = new Image();
                 img.src = this.dataUrl;
+                
                 img.onload = function () {
                     self._data = img;
                     console.debug('update', self._data);
