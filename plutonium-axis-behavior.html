@@ -136,7 +136,10 @@
                 this._ranges = d3.scaleLinear().range(this._getRange(this.domain, details));
 //                this._scale = d3.scaleLinear().rangeRound([center - span / 2, center + span / 2]);
             }
-
+            
+            this._onRender();
+        },
+        _onRender: function () {
             this._ranges.domain([this.center - this.span / 2, this.center + this.span / 2]);
 
             var transformationAttribute;
@@ -214,6 +217,7 @@
                 this._parseTime = d3.timeParse(timeParse);
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'set ne time pattern', timeParse);
             }
+            this._onRender();
         },
         _observeVisiblePart: function (span, center) {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe visible parts with center', '=', center, ',', 'span', '=', span);
@@ -222,7 +226,7 @@
             } else {
                 this._ranges = d3.scaleLinear().range([center - span / 2, center + span / 2]);
             }
-
+            this._onRender();
 //            d3.select(Polymer.dom(this).parentNode) // change the x axis
 //                    .duration(1000)
 //                    .call(this._axis);
@@ -248,6 +252,8 @@
                     console.warn((this.id ? this.is + '#' + this.id : this.is), 'orientation value is invalid:', this.orientation);
                     return;
             }
+            
+            this._onRender();
         }
     };
 
