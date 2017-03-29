@@ -158,6 +158,13 @@
 //                this._scale = d3.scaleLinear().rangeRound([center - span / 2, center + span / 2]);
             }
 
+            if(this._axisGraphics) {
+                this._axisGraphics.remove();
+            }
+            if (this._axisLabel) {
+                this._axisLabel.remove();
+            }
+
             this._onRender();
         },
         _onRender: function () {
@@ -202,14 +209,14 @@
             d3.select('#' + this.id + '-axis').remove();
 
             if (this.parentNode._g) {
-                this.parentNode._g.append("g")
+                this._axisGraphics = this.parentNode._g.append("g")
                         .attr("id", this.id + "-axis")
                         .attr("class", "axis")
                         .attr("transform", transformationAttribute)
                         .call(this._axis);
 
                 d3.select('#' + this.id + '-axis-label').remove();
-                this.parentNode._g.append("text")
+                this._axisLabel =this.parentNode._g.append("text")
                         .attr("id", this.id + "-axis-label")
                         .attr("class", "axis-label")
                         .attr("transform", transformationAttributeForLabel)
