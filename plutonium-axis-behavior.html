@@ -126,7 +126,7 @@
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'range', range);
             return range;
         },
-        
+
         _getRangeByParent: function (domain) {
             var range;
             switch (domain) {
@@ -158,19 +158,11 @@
 //                this._scale = d3.scaleLinear().rangeRound([center - span / 2, center + span / 2]);
             }
 
-            if(this._axisGraphics) {
-                this._axisGraphics.remove();
-            }
-            if (this._axisLabel) {
-                this._axisLabel.remove();
-            }
+
 
             this._onRender();
         },
         _onRender: function () {
-            console.log('KKKKKKKKKKKKKKKKKKKKK', (this.center - this.span / 2), (this.center + (this.span / 2)  ));
-//            this._ranges.domain([this.center - this.span / 2, this.center + this.span / 2]);
-//            this._ranges.domain([-100, 100]);
             this._ranges.domain([(this.center - this.span / 2), (this.center + this.span / 2)]);
 
             var transformationAttribute;
@@ -179,12 +171,11 @@
                 case 'left':
                     this._axis = d3.axisLeft(this._ranges);
                     transformationAttribute = 'translate(0,0)';
-//                    transformationAttributeForLabel = 'translate(' + (details.width / 2) + ' ,' + (-details.margin.left) + ') ' + 'rotate(-90)';
                     transformationAttributeForLabel = 'translate(' + (-this.parentNode._margin.left / 2) + ' ,' + (this.parentNode._height / 2) + ') ' + 'rotate(-90)';
                     break;
                 case 'right':
                     this._axis = d3.axisRight(this._ranges);
-                    transformationAttribute = 'translate(' + details.width + ', 0)';
+                    transformationAttribute = 'translate(' + this.parentNode._width + ', 0)';
                     transformationAttributeForLabel = 'translate(' + (this.parentNode._width + this.parentNode._margin.right) + ', ' + (this.parentNode._height / 2) + ')' + ' rotate(90)';
                     break;
                 case 'top':
@@ -206,9 +197,9 @@
 // text label for the x axis
 
 
-            d3.select('#' + this.id + '-axis').remove();
 
             if (this.parentNode._g) {
+                d3.select('#' + this.id + '-axis').remove();
                 this._axisGraphics = this.parentNode._g.append("g")
                         .attr("id", this.id + "-axis")
                         .attr("class", "axis")
@@ -216,7 +207,7 @@
                         .call(this._axis);
 
                 d3.select('#' + this.id + '-axis-label').remove();
-                this._axisLabel =this.parentNode._g.append("text")
+                this._axisLabel = this.parentNode._g.append("text")
                         .attr("id", this.id + "-axis-label")
                         .attr("class", "axis-label")
                         .attr("transform", transformationAttributeForLabel)
