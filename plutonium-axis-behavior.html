@@ -167,26 +167,27 @@
 
             var transformationAttribute;
             var transformationAttributeForLabel;
+            var labelFontSize = this.parentNode._margin[this.orientation] / 4;
             switch (this.orientation) {
                 case 'left':
                     this._axis = d3.axisLeft(this._ranges);
                     transformationAttribute = 'translate(0,0)';
-                    transformationAttributeForLabel = 'translate(' + (-this.parentNode._margin.left / 2) + ' ,' + (this.parentNode._height / 2) + ') ' + 'rotate(-90)';
+                    transformationAttributeForLabel = 'translate(' + (-this.parentNode._margin.left * 0.75) + ' ,' + (this.parentNode._height / 2) + ') ' + 'rotate(-90)';
                     break;
                 case 'right':
                     this._axis = d3.axisRight(this._ranges);
                     transformationAttribute = 'translate(' + this.parentNode._width + ', 0)';
-                    transformationAttributeForLabel = 'translate(' + (this.parentNode._width + this.parentNode._margin.right) + ', ' + (this.parentNode._height / 2) + ')' + ' rotate(90)';
+                    transformationAttributeForLabel = 'translate(' + (this.parentNode._width + this.parentNode._margin.right * 0.75) + ', ' + (this.parentNode._height / 2) + ')' + ' rotate(90)';
                     break;
                 case 'top':
                     this._axis = d3.axisTop(this._ranges);
                     transformationAttribute = 'translate(0,0)';
-                    transformationAttributeForLabel = 'translate(' + (this.parentNode._width / 2) + ',' + (-this.parentNode._margin.top) + ')';
+                    transformationAttributeForLabel = 'translate(' + (this.parentNode._width / 2) + ',' + (-this.parentNode._margin.top * 0.75) + ')';
                     break;
                 case 'bottom':
                     this._axis = d3.axisBottom(this._ranges);
                     transformationAttribute = "translate(0," + this.parentNode._height + ')';
-                    transformationAttributeForLabel = "translate(" + (this.parentNode._width / 2) + " ," + (this.parentNode._height + 10 + this.parentNode._margin.top) + ")";
+                    transformationAttributeForLabel = "translate(" + (this.parentNode._width / 2) + " ," + (this.parentNode._height + this.parentNode._margin.bottom) + ")";
                     break;
                 default:
                     console.warn((this.id ? this.is + '#' + this.id : this.is), 'orientation value is invalid:', this.orientation);
@@ -203,6 +204,7 @@
                 this._axisGraphics = this.parentNode._g.append("g")
                         .attr("id", this.id + "-axis")
                         .attr("class", "axis")
+                        .style("font-size", labelFontSize + "px")
                         .attr("transform", transformationAttribute)
                         .call(this._axis);
 
@@ -212,6 +214,7 @@
                         .attr("class", "axis-label")
                         .attr("transform", transformationAttributeForLabel)
                         .style("text-anchor", "middle")
+                        .style("font-size", labelFontSize + "px")
                         .text(this.label + " (" + this.unit + ")")
                         .attr("class", 'axis-label');
             }
