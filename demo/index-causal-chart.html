@@ -1,28 +1,33 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-        <title>plutonium-causal-chart demo</title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-        <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <title>plutonium-causal-chart demo</title>
 
-        <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-        <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-        <link rel="import" href="../plutonium-visualization.html">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
-        <style is="custom-style" include="demo-pages-shared-styles">
-        </style>
-    </head>
-    <body>
-        <div class="vertical-section-container centered">
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../plutonium-visualization.html">
 
-            <h3>Basic plutonium-causal-chart demo</h3>
+    <style is="custom-style" include="demo-pages-shared-styles">
 
-            <demo-snippet>
-                <template>
-                    <button id="updateButton">Update</button>
+
+    </style>
+</head>
+
+<body>
+    <div class="vertical-section-container centered">
+
+        <h3>Basic plutonium-causal-chart demo</h3>
+
+        <demo-snippet>
+            <template>
+                    <button id="updateButton">Update live</button>
+                    <button id="prismaButton">Prisma</button>
                     <div id="chart1" 
                          is="plutonium-causal-chart" 
                          data-url="http://localhost:8080/live/agilent_hp_8920B/trace/heatmap?amplitude_reference=0.0&amplitude_span=100.0&frequency_span=40.0&frequency_center=100.0&width=360&height=400&pixel_width=1&pixel_height=1&opacity=233&ver=1488490247813"
@@ -77,6 +82,7 @@
                     </div>
                     <script>
                         var updateButton = document.querySelector('#updateButton');
+                        var prismaButton = document.querySelector('#prismaButton');
                         var chart1 = document.querySelector('div#chart1');
                         var axis0 = document.querySelector('#xAxis');
                         var axis1 = document.querySelector('#yAxis');
@@ -90,18 +96,42 @@
                             axis2.center = axis2.center + 1;
                             axis3.center = axis3.center + 1;
                         });
+                        prismaButton.addEventListener('click', function () {
+                            console.log('Update prisma');
+                            var c=document.createElement("canvas");
+                            var ctx=c.getContext("2d");
+                            var imgData=ctx.createImageData(360,1);
+                            for (var i=0;i<imgData.data.length;i+=3) {
+                              imgData.data[i+0]=0;
+                              imgData.data[i+1]=0;
+                              imgData.data[i+2]=0;
+                            }
+                            c.toBlob(function(blob) {
+                                var reader = new window.FileReader();
+                                 reader.readAsDataURL(blob); 
+                                 reader.onloadend = function() {
+                                                base64data = reader.result;                
+                                                chart1.update(reader.result);
+                                  }
+                                
+                                
+                                
+                            } , 'image/png');
+                            
+                        });
                     </script>
                 </template>
 
-            </demo-snippet>
+        </demo-snippet>
 
-            <!--            <demo-snippet>
+        <!--            <demo-snippet>
                             <template is="dom-bind">
                                 <plutonium-datasource source-url="./waterfall.json" source-type="json" last-data="{{waterfallData}}"></plutonium-datasource>
                                 <div id="chart0" is="plutonium-causal-chart" data="[[waterfallData]]"></div>
                             </template>
                         </demo-snippet>-->
 
-        </div>
-    </body>
+    </div>
+</body>
+
 </html>
