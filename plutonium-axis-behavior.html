@@ -167,7 +167,7 @@
 
             var transformationAttribute;
             var transformationAttributeForLabel;
-            var labelFontSize = this.parentNode._margin[this.orientation] / 2;
+            var labelFontSize = this.parentNode._margin[this.orientation] / 4;
             switch (this.orientation) {
                 case 'left':
                     this._axis = d3.axisLeft(this._ranges);
@@ -204,6 +204,7 @@
                 this._axisGraphics = this.parentNode._g.append("g")
                         .attr("id", this.id + "-axis")
                         .attr("class", "axis")
+                        .style("font-size", labelFontSize + "px")
                         .attr("transform", transformationAttribute)
                         .call(this._axis);
 
