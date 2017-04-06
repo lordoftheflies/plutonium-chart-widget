@@ -22,10 +22,10 @@
                 type: Object,
                 notify: true,
                 value: {
-                    top: 30,
-                    right: 30,
-                    bottom: 30,
-                    left: 30
+                    top: 40,
+                    right: 40,
+                    bottom: 40,
+                    left: 40
                 }
             },
             _width: {
@@ -52,20 +52,20 @@
             'iron-resize': '_onResize',
             'plutonium-render': '_onRender'
         },
-        created: function () {
+        created: function() {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'created');
         },
-        ready: function () {
+        ready: function() {
             this._svg = d3.select(this.$.container);
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'ready');
         },
-        attached: function () {
+        attached: function() {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'attached');
         },
-        detached: function () {
+        detached: function() {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'detached');
         },
-        _onResize: function (event, details) {
+        _onResize: function(event, details) {
             if (this.offsetWidth > 0 && this.offsetHeight > 0) {
                 this._viewport = {
                     width: this.offsetWidth,
@@ -76,7 +76,7 @@
 
             this.draw();
         },
-        _observeLayout: function (viewport, margin) {
+        _observeLayout: function(viewport, margin) {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe-layout', viewport, margin);
             this._svg = this._svg.attr('width', this._viewport.width).attr('height', this._viewport.height);
             if (this._g)
@@ -84,7 +84,7 @@
             this.initialize();
 
         },
-        _observerContentArea: function (width, height) {
+        _observerContentArea: function(width, height) {
             this.fire('plutonium-chart-resize', {
                 id: this.id,
                 width: width,
@@ -93,18 +93,18 @@
             this.$.canvas.width = width;
             this.$.canvas.height = height;
         },
-        _computeContentWidth: function (viewportWidth, marginLeft, marginRight) {
+        _computeContentWidth: function(viewportWidth, marginLeft, marginRight) {
             this._width = viewportWidth - marginLeft - marginRight;
         },
-        _computeContentHeight: function (viewportHeight, marginTop, marginBottom) {
+        _computeContentHeight: function(viewportHeight, marginTop, marginBottom) {
             this._height = viewportHeight - marginTop - marginBottom;
         },
-        _onRender: function (chart, x, y) {
+        _onRender: function(chart, x, y) {
             this.draw();
-            
+
             this.loading = false;
         },
-        draw: function () {
+        draw: function() {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw should be overridden');
         }
     };
@@ -117,4 +117,5 @@
         Polymer.IronResizableBehavior,
         Plutonium.ChartBehaviorImpl
     ];
+
 </script>
