@@ -16,11 +16,13 @@
         properties: {
             label: {
                 type: String,
-                notify: true
+                notify: true,
+                value: ''
             },
             unit: {
                 type: String,
-                notify: true
+                notify: true,
+                value: ''
             },
 
             /**
@@ -274,8 +276,10 @@
         },
 
         _observeText: function(title, unit) {
-            console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe textual attributes', title, unit);
-            this._onRender();
+            if (title && unit) {
+                console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe textual attributes', title, unit);
+                this._onRender();
+            }
         }
     };
 
