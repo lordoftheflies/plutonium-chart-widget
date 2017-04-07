@@ -61,6 +61,7 @@
         },
         attached: function() {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'attached');
+            this.async(this.notifyResize, 1);
         },
         detached: function() {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'detached');
