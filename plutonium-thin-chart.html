@@ -63,7 +63,9 @@ Visualization widget.
 
             canvas {
                 margin-left: var(--margin-left, 0px);
+                margin-top: var(--margin-right, 0px);
                 margin-top: var(--margin-top, 0px);
+                margin-top: var(--margin-bottom, 0px);
                 width: var(--width);
                 height: var(--height);
             }
@@ -125,15 +127,17 @@ Visualization widget.
             },
 
             initialize: function() {
-                this._g = this._svg.append("g").attr("transform", "translate(" + this._margin.left + "," + this._margin.top + ")");
-
-                this.$.canvas.width = this._width;
-                this.$.canvas.height = this._height;
-                this.customStyle['--margin-left'] = this._margin.left + 'px !important';
-                this.customStyle['--margin-top'] = this._margin.top + 'px !important';
-                this.customStyle['--width'] = this._width + 'px !important';
-                this.customStyle['--height'] = this._height + 'px !important';
-                this.updateStyles();
+                //                this._g = this._svg.append("g").attr("transform", "translate(" + this._margin.left + "," + this._margin.top + ")");
+                //
+                //                this.$.canvas.width = this._width;
+                //                this.$.canvas.height = this._height;
+                //                this.customStyle['--margin-left'] = this._margin.left + 'px !important';
+                //                this.customStyle['--margin-top'] = this._margin.top + 'px !important';
+                //                this.customStyle['--margin-right'] = this._margin.right + 'px !important';
+                //                this.customStyle['--margin-bottom'] = this._margin.bottom + 'px !important';
+                //                this.customStyle['--width'] = this._width + 'px !important';
+                //                this.customStyle['--height'] = this._height + 'px !important';
+                //                this.updateStyles();
                 this._graph = d3.select('canvas');
             },
             draw: function() {
