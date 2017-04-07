@@ -65,11 +65,19 @@
         detached: function() {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'detached');
         },
+
+        get parent() {
+            if (this.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+                return this.parentNode.host;
+            }
+            return this.parentNode;
+        },
+
         _onResize: function(event, details) {
             if (this.offsetWidth > 0 && this.offsetHeight > 0) {
                 this._viewport = {
-                    width: this.offsetWidth,
-                    height: this.offsetHeight
+                    width: this.parent.offsetWidth,
+                    height: this.parent.offsetHeight
                 };
                 console.log((this.id ? this.is + '#' + this.id : this.is), 'resized to', this._viewport);
             }
