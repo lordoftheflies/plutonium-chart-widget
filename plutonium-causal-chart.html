@@ -221,7 +221,15 @@ Visualization widget.
                 var img = new Image();
                 img.src = this.dataUrl;
                 img.onload = function() {
-                    self._data.push(img);
+                    if (self._height > self._data.length) {
+                        self._data.push(img);
+                    } else {
+                        for (var i = 0; i < img.height; i++) {
+                            self._data.shift();
+                        }
+                        self._data.push(img);
+
+                    }
                     console.debug('add new line', self._data);
                     self._onRender();
                 };
