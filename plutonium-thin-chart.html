@@ -107,24 +107,24 @@ Visualization widget.
                 '_observeServerSideData(_g, dataUrl)'
             ],
 
-            _computeColorBucketCount: function (data) {
+            _computeColorBucketCount: function(data) {
                 return (data.domains.z.length && data.domains.z.length > 0) ? data.domains.z.length - 1 : 0;
             },
-            _computeCellSizeX: function (resolution, height) {
+            _computeCellSizeX: function(resolution, height) {
                 return height / resolution.height;
             },
-            _computeCellSizeY: function (resolution, width) {
+            _computeCellSizeY: function(resolution, width) {
                 return width / resolution.width;
             },
-            _computeResolution: function (data) {
+            _computeResolution: function(data) {
                 return data.resolution;
             },
-            _observeServerSideData: function (_g, dataUrl) {
+            _observeServerSideData: function(_g, dataUrl) {
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe-data');
                 this.update();
             },
 
-            initialize: function () {
+            initialize: function() {
                 this._g = this._svg.append("g").attr("transform", "translate(" + this._margin.left + "," + this._margin.top + ")");
 
                 this.$.canvas.width = this._width;
@@ -136,33 +136,33 @@ Visualization widget.
                 this.updateStyles();
                 this._graph = d3.select('canvas');
             },
-            draw: function () {
+            draw: function() {
 
 
                 var self = this;
                 console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');
 
-//                self._graph = d3.select('canvas')
-////                        .attr('x', self._margin.left)
-////                        .attr('y', self._margin.top)
-//                        .attr("style", "margin-left: " + self._margin.left + "px !important; margin-top: " + self._margin.top + "px !important;")
-//                        .attr('width', self._width + 'px')
-//                        .attr('height', self._height + 'px');
+                //                self._graph = d3.select('canvas')
+                ////                        .attr('x', self._margin.left)
+                ////                        .attr('y', self._margin.top)
+                //                        .attr("style", "margin-left: " + self._margin.left + "px !important; margin-top: " + self._margin.top + "px !important;")
+                //                        .attr('width', self._width + 'px')
+                //                        .attr('height', self._height + 'px');
 
-//                self._graph = self._graph.attr('transform', 'translate(0, ' + (self._tick++) + ')')
+                //                self._graph = self._graph.attr('transform', 'translate(0, ' + (self._tick++) + ')')
                 self._graph = self._graph.attr('transform', 'translate(0, 0)');
 
                 if (this._data) {
                     var context = self.$.canvas.getContext("2d");
                     context.clearRect(0, 0, self._data.width, self._data.height);
                     context.beginPath();
-//                self._data.forEach(function (d, i) {
+                    //                self._data.forEach(function (d, i) {
                     context.drawImage(self._data, 0, 0, self._data.width, self._data.height, 0, 0, self._data.width, self._data.height);
-//                });
+                    //                });
                     context.closePath();
                 }
 
-                console.debug((self.id ? self.is + '#' + self.id : self.is), 'render scales');
+                /*console.debug((self.id ? self.is + '#' + self.id : self.is), 'render scales');
                 var distributedScales = self.queryAllEffectiveChildren('.scale');
                 for (var index in distributedScales) {
                     console.debug('- ', (distributedScales[index].id ? distributedScales[index].is + '#' + distributedScales[index].id : distributedScales[index].is));
@@ -174,36 +174,38 @@ Visualization widget.
                         margin: self._margin
                     });
                 }
+*/
+                //                var self = this;
+                //                console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');
 
-//                var self = this;
-//                console.debug((this.id ? this.is + '#' + this.id : this.is), 'draw');
-
-//                self._graph = self._g.append('svg:image').attr('xlink:href', self.dataUrl)
-//                        .attr('id', self.id + 'Graph')
-//                        .attr('x', '0')
-//                        .attr('y', '0')
-//                        .attr('width', self._width + 'px')
-//                        .attr('height', self._height + 'px');
-//                console.debug((self.id ? self.is + '#' + self.id : self.is), 'render scales');
-//                var distributedScales = self.queryAllEffectiveChildren('.scale');
-//                for (var index in distributedScales) {
-//                    console.debug('- ', (distributedScales[index].id ? distributedScales[index].is + '#' + distributedScales[index].id : distributedScales[index].is));
-//                    distributedScales[index].fire('d3-update', {
-//                        graphics: self._g,
-//                        container: self._svg,
-//                        width: self._width,
-//                        height: self._height,
-//                        margin: self._margin
-//                    });
-//                }
+                //                self._graph = self._g.append('svg:image').attr('xlink:href', self.dataUrl)
+                //                        .attr('id', self.id + 'Graph')
+                //                        .attr('x', '0')
+                //                        .attr('y', '0')
+                //                        .attr('width', self._width + 'px')
+                //                        .attr('height', self._height + 'px');
+                //                console.debug((self.id ? self.is + '#' + self.id : self.is), 'render scales');
+                //                var distributedScales = self.queryAllEffectiveChildren('.scale');
+                //                for (var index in distributedScales) {
+                //                    console.debug('- ', (distributedScales[index].id ? distributedScales[index].is + '#' + distributedScales[index].id : distributedScales[index].is));
+                //                    distributedScales[index].fire('d3-update', {
+                //                        graphics: self._g,
+                //                        container: self._svg,
+                //                        width: self._width,
+                //                        height: self._height,
+                //                        margin: self._margin
+                //                    });
+                //                }
             },
-            refresh: function (input) {
-                var blob = new Blob([input], {type: 'image/png'});
+            refresh: function(input) {
+                var blob = new Blob([input], {
+                    type: 'image/png'
+                });
                 var url = URL.createObjectURL(blob);
                 var img = new Image;
 
                 var self = this;
-                img.onload = function () {
+                img.onload = function() {
                     self._data = img;
                     console.debug((self.id ? self.is + '#' + self.id : self.is), 'refresh', self._data);
                     self._onRender();
@@ -211,33 +213,34 @@ Visualization widget.
                 }
                 img.src = url
             },
-            update: function () {
+            update: function() {
                 var self = this;
                 var img = new Image();
                 img.src = this.dataUrl;
-                
-                img.onload = function () {
+
+                img.onload = function() {
                     self._data = img;
                     console.debug('update', self._data);
                     self._onRender();
                 };
 
-//                var self = this;
-////                var selection = d3.select('image#' + self.id + 'Graph');
-//                var img = new Image();
-//                img.src = this.dataUrl;
-//                img.onload = function () {
-//                    try {
-//                        self.$$('image#' + self.id + 'Graph').remove();
-//                    } catch (exception) {
-//                        d3.select('image#' + self.id + 'Graph').remove();
-//                    }
-//                    self._onRender();
-////                    
-//
-//                };
+                //                var self = this;
+                ////                var selection = d3.select('image#' + self.id + 'Graph');
+                //                var img = new Image();
+                //                img.src = this.dataUrl;
+                //                img.onload = function () {
+                //                    try {
+                //                        self.$$('image#' + self.id + 'Graph').remove();
+                //                    } catch (exception) {
+                //                        d3.select('image#' + self.id + 'Graph').remove();
+                //                    }
+                //                    self._onRender();
+                ////                    
+                //
+                //                };
 
             }
         });
+
     </script>
 </dom-module>

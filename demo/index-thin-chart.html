@@ -1,41 +1,44 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-        <title>plutonium-thin-chart demo</title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-        <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <title>plutonium-thin-chart demo</title>
 
-        <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-        <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-        <link rel="import" href="../plutonium-visualization.html">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
-        <style is="custom-style" include="demo-pages-shared-styles">
-            #chart1 {
-                width: 150px;
-                height: 100px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="vertical-section-container centered">
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../plutonium-visualization.html">
 
-            <h3>plutonium-thin-chart demo</h3>
+    <style is="custom-style" include="demo-pages-shared-styles">
+        #chart1 {
+            width: 150px;
+            height: 100px;
+        }
 
-            <demo-snippet>
-                <template>
+    </style>
+</head>
+
+<body>
+    <div class="vertical-section-container centered">
+
+        <h3>plutonium-thin-chart demo</h3>
+
+        <demo-snippet>
+            <template>
                     <button id="updateButton">Update</button>
                     <div id="chart1" 
                          is="plutonium-thin-chart" 
                          data-url="http://localhost:8080/live/agilent_hp_8920B/trace/image?amplitude_reference=0.0&amplitude_span=100.0&frequency_span=40.0&frequency_center=100.0&width=90&height=40&pixel_width=1&pixel_height=1&opacity=233&ver=1488490247813"
                          class="card">
 
-                        <plutonium-axis id="xAxis" class="scale" display-name="X axis" orientation="bottom" domain="horizontal" center="100" label="X tengely" unit="MHz" span="40"></plutonium-axis>
-                        <plutonium-axis id="yAxis" class="scale" display-name="Y axis" orientation="left" domain="vertical" center="-50" label="Y tengely" unit="MHz" span="100"></plutonium-axis>
-                        <plutonium-axis id="zAxis" class="scale" display-name="Z axis" orientation="top" domain="horizontal" label="Z tengely" unit="MHz" center="100" span="40"></plutonium-axis>
-                        <plutonium-axis id="aAxis" class="scale" display-name="A axis" orientation="right" label="A tengely" unit="MHz" domain="vertical" center="-50" span="100"></plutonium-axis>
+                        <plutonium-axis id="xAxis" class="scale" display-name="X axis" orientation="bottom" axis-layout="horizontal" center="100" label="X tengely" unit="MHz" span="40"></plutonium-axis>
+                        <plutonium-axis id="yAxis" class="scale" display-name="Y axis" orientation="left" axis-layout="vertical" center="-50" label="Y tengel    y" unit="MHz" span="100"></plutonium-axis>
+                        <plutonium-axis id="zAxis" class="scale" display-name="Z axis" orientation="top" axis-layout="horizontal" label="Z tengely" unit="MHz" center="100" span="40"></plutonium-axis>
+                        <plutonium-axis id="aAxis" class="scale" display-name="A axis" orientation="right" axis-layout="legend" label="A tengely" unit="MHz" center="-50" span="100"></plutonium-axis>
                     </div>
                     <script>
                         var updateButton = document.querySelector('#updateButton');
@@ -48,12 +51,12 @@
                     </script>
                 </template>
 
-            </demo-snippet>
+        </demo-snippet>
 
-            <h3>plutonium-thin-chart demo dom-bind</h3>
-            
-            <demo-snippet>
-                <template is="dom-bind">
+        <h3>plutonium-thin-chart demo dom-bind</h3>
+
+        <demo-snippet>
+            <template is="dom-bind">
                     <button id="updateButton2">Update</button>
                     <div id="chart2" 
                          is="plutonium-thin-chart" 
@@ -65,7 +68,7 @@
                             class="scale"
                             display-name="X axis"
                             orientation="bottom"
-                            domain="horizontal"
+                            axis-layout="horizontal"
                             center="100" 
                             label="X tengely"
                             unit="MHz"
@@ -76,7 +79,7 @@
                             class="scale"
                             display-name="Y axis"
                             orientation="left"
-                            domain="vertical"
+                            axis-layout="vertical"
                             center="-50" 
                             label="Y tengely"
                             unit="MHz"
@@ -88,7 +91,7 @@
                             class="scale"
                             display-name="Z axis"
                             orientation="top"
-                            domain="horizontal"
+                            axis-layout="horizontal"
                             label="Z tengely"
                             unit="MHz"
                             center="100" 
@@ -101,7 +104,7 @@
                             orientation="right"
                             label="A tengely"
                             unit="MHz"
-                            domain="vertical"
+                            axis-layout="vertical"
                             center="-50" 
                             span="100">
                         </plutonium-axis>
@@ -118,12 +121,12 @@
                     </script>
                 </template>
 
-            </demo-snippet>
+        </demo-snippet>
 
 
 
 
-<!--            <demo-snippet>
+        <!--            <demo-snippet>
                 <template is="dom-bind">
                     <template>
                     <plutonium-datasource source-url="./waterfall.json" source-type="json" last-data="{{waterfallData}}"></plutonium-datasource>
@@ -137,6 +140,7 @@
 
 
 
-        </div>
-    </body>
+    </div>
+</body>
+
 </html>

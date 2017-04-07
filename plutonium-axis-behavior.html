@@ -34,7 +34,7 @@
              */
             orientation: {
                 type: String,
-                value: 'left'
+                notify: true
             },
 
             /**
@@ -42,9 +42,9 @@
              * Possible values: horizontal, vertical, legend.
              * @type {string}
              */
-            domain: {
+            axisLayout: {
                 type: String,
-                value: 'horizontal'
+                notify: true
             },
 
             /**
@@ -95,18 +95,26 @@
                 notify: true,
                 //                value: '%d-%b-%y'
             },
-            _scale: {
+            _ranges: {
                 type: Object
             },
             _axis: {
                 type: Object
+            },
+            _title: {
+                type: String,
+                notify: true
             }
         },
         observers: [
             '_observeText(label, unit)',
+            '_observeRange(minimum, maximum)',
+            '_observeOrientation(orientation)',
+
             '_observeTimeParsePattern(timeParse)',
             '_observeVisiblePart(span, center)',
-            //            '_observeOrientation(orientation, _scale)'
+
+            '_observeD3State(_ranges, _title)'
         ],
         listeners: {
             'iron-resize': '_onResize',
@@ -131,9 +139,9 @@
 
         },
 
-        _getRange: function(domain, details) {
+        _getRange: function(layout, details) {
             var range;
-            switch (domain) {
+            switch (layout) {
                 case 'horizontal':
                     range = [0, details.width];
                     break;
@@ -151,9 +159,9 @@
             return range;
         },
 
-        _getRangeByParent: function(domain) {
+        _getRangeByParent: function(layout) {
             var range;
-            switch (domain) {
+            switch (layout) {
                 case 'horizontal':
                     range = [0, this.parentNode._width];
                     break;
@@ -173,52 +181,45 @@
 
         _onD3Update: function(event, details) {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'd3-draw');
-
-            if (this.timeParse) {
-                //                this._scale = d3.scaleTime().rangeRound([center - span / 2, center + span / 2]);
-                this._ranges = d3.scaleTime().range(this._getRange(this.domain, details));
-            } else {
-                this._ranges = d3.scaleLinear().range(this._getRange(this.domain, details));
-                //                this._scale = d3.scaleLinear().rangeRound([center - span / 2, center + span / 2]);
+            if (this._ranges && this._title && this._axis) {
+                // this._onRender();
             }
-
-
-
-            this._onRender();
+            //
+        },
+        _observeD3State: function(_ranges, _title) {
+            //this._onRender();
         },
         _onRender: function() {
-            if (this.center && this.span && this.label && this.unit) {
+            if (this.parentNode._g && this.parentNode._width && this.parentNode._height) {
 
-                this._ranges.domain([(this.center - this.span / 2), (this.center + this.span / 2)]);
+                var r = this._ranges.range(this._getRangeByParent(this.axisLayout));
 
-
-                var transformationAttribute;
-                var transformationAttributeForLabel;
-                var labelFontSize = this.parentNode._margin[this.orientation] / 3;
+                r.domain([this.minimum, this.maximum]);
+                this._labelFontSize = this.parentNode._margin[this.orientation] / 3;
                 switch (this.orientation) {
                     case 'left':
-                        this._axis = d3.axisLeft(this._ranges);
-                        transformationAttribute = 'translate(0,0)';
-                        transformationAttributeForLabel = 'translate(' + (-this.parentNode._margin.left * 0.75) + ' ,' + (this.parentNode._height / 2) + ') ' + 'rotate(-90)';
-                        this._axis.ticks(this.parentNode._height / (2 * labelFontSize));
+                        this._axis = d3.axisLeft(r);
+                        this._transformationAttribute = 'translate(0,0)';
+                        this._transformationAttributeForLabel = 'translate(' + (-this.parentNode._margin.left * 0.75) + ' ,' + (this.parentNode._height / 2) + ') ' + 'rotate(-90)';
+                        this._axis.ticks(this.parentNode._height / (2 * this._labelFontSize));
                         break;
                     case 'right':
-                        this._axis = d3.axisRight(this._ranges);
-                        transformationAttribute = 'translate(' + this.parentNode._width + ', 0)';
-                        transformationAttributeForLabel = 'translate(' + (this.parentNode._width + this.parentNode._margin.right * 0.75) + ', ' + (this.parentNode._height / 2) + ')' + ' rotate(90)';
-                        this._axis.ticks(this.parentNode._height / (2 * labelFontSize));
+                        this._axis = d3.axisRight(r);
+                        this._transformationAttribute = 'translate(' + this.parentNode._width + ', 0)';
+                        this._transformationAttributeForLabel = 'translate(' + (this.parentNode._width + this.parentNode._margin.right * 0.75) + ', ' + (this.parentNode._height / 2) + ')' + ' rotate(90)';
+                        this._axis.ticks(this.parentNode._height / (2 * this._labelFontSize));
                         break;
                     case 'top':
-                        this._axis = d3.axisTop(this._ranges);
-                        transformationAttribute = 'translate(0,0)';
-                        transformationAttributeForLabel = 'translate(' + (this.parentNode._width / 2) + ',' + (-this.parentNode._margin.top * 0.75) + ')';
-                        this._axis.ticks(this.parentNode._width / (2 * labelFontSize));
+                        this._axis = d3.axisTop(r);
+                        this._transformationAttribute = 'translate(0,0)';
+                        this._transformationAttributeForLabel = 'translate(' + (this.parentNode._width / 2) + ',' + (-this.parentNode._margin.top * 0.75) + ')';
+                        this._axis.ticks(this.parentNode._width / (2 * this._labelFontSize));
                         break;
                     case 'bottom':
-                        this._axis = d3.axisBottom(this._ranges);
-                        transformationAttribute = "translate(0," + this.parentNode._height + ')';
-                        transformationAttributeForLabel = "translate(" + (this.parentNode._width / 2) + " ," + (this.parentNode._height + this.parentNode._margin.bottom) + ")";
-                        this._axis.ticks(this.parentNode._width / (2 * labelFontSize));
+                        this._axis = d3.axisBottom(r);
+                        this._transformationAttribute = "translate(0," + this.parentNode._height + ')';
+                        this._transformationAttributeForLabel = "translate(" + (this.parentNode._width / 2) + " ," + (this.parentNode._height + this.parentNode._margin.bottom) + ")";
+                        this._axis.ticks(this.parentNode._width / (2 * this._labelFontSize));
                         break;
                     default:
                         console.warn((this.id ? this.is + '#' + this.id : this.is), 'orientation value is invalid:', this.orientation);
@@ -226,30 +227,24 @@
                 }
 
 
-                // text label for the x axis
 
+                d3.select('#' + this.id + '-axis').remove();
+                this._axisGraphics = this.parentNode._g.append("g")
+                    .attr("id", this.id + "-axis")
+                    .attr("class", "axis")
+                    .style("font-size", (this._labelFontSize / 2) + "px")
+                    .attr("transform", this._transformationAttribute)
+                    .call(this._axis);
 
-
-                if (this.parentNode._g) {
-                    d3.select('#' + this.id + '-axis').remove();
-                    this._axisGraphics = this.parentNode._g.append("g")
-                        .attr("id", this.id + "-axis")
-                        .attr("class", "axis")
-                        .style("font-size", (labelFontSize / 2) + "px")
-                        .attr("transform", transformationAttribute)
-                        .call(this._axis);
-
-                    d3.select('#' + this.id + '-axis-label').remove();
-                    this._axisLabel = this.parentNode._g.append("text")
-                        .attr("id", this.id + "-axis-label")
-                        .attr("class", "axis-label")
-                        .attr("transform", transformationAttributeForLabel)
-                        .style("text-anchor", "middle")
-                        .style("font-size", labelFontSize + "px")
-                        .text(this.label + " (" + this.unit + ")")
-                        .attr("class", 'axis-label');
-                }
-
+                d3.select('#' + this.id + '-axis-label').remove();
+                this._axisLabel = this.parentNode._g.append("text")
+                    .attr("id", this.id + "-axis-label")
+                    .attr("class", "axis-label")
+                    .attr("transform", this._transformationAttributeForLabel)
+                    .style("text-anchor", "middle")
+                    .style("font-size", this._labelFontSize + "px")
+                    .text(this._title)
+                    .attr("class", 'axis-label');
             }
         },
 
@@ -262,54 +257,30 @@
         },
         _observeVisiblePart: function(span, center) {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe visible parts with center', '=', center, ',', 'span', '=', span);
-            //            if (this.timeParse) {
-            //                this._ranges = d3.scaleTime().range([center - span / 2, center + span / 2]);
-            //            } else {
-            //                this._ranges = d3.scaleLinear().range([center - span / 2, center + span / 2]);
-            //            }
-
+            this.minimum = this.center - this.span / 2;
+            this.maximum = this.center + this.span / 2;
+        },
+        _observeRange: function(minimum, maximum) {
             if (this.timeParse) {
-                //                this._scale = d3.scaleTime().rangeRound([center - span / 2, center + span / 2]);
-                this._ranges = d3.scaleTime().range(this._getRangeByParent(this.domain));
+                this._ranges = d3.scaleTime();
             } else {
-                this._ranges = d3.scaleLinear().range(this._getRangeByParent(this.domain));
-                //                this._scale = d3.scaleLinear().rangeRound([center - span / 2, center + span / 2]);
+                this._ranges = d3.scaleLinear();
             }
 
-            this._onRender();
+            //this._onRender();
             //            d3.select(Polymer.dom(this).parentNode) // change the x axis
             //                    .duration(1000)
             //                    .call(this._axis);
         },
 
-        _observeOrientation: function(orientation, _scale) {
+        _observeOrientation: function(orientation) {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe orientation', 'orientation', '=', orientation);
-            //            this._scale = d3.scaleOrdinal(); //.padding(0.1);
-            switch (orientation) {
-                case 'left':
-                    this._axis = d3.axisLeft(_scale);
-                    break;
-                case 'right':
-                    this._axis = d3.axisRight(_scale);
-                    break;
-                case 'top':
-                    this._axis = d3.axisTop(_scale);
-                    break;
-                case 'bottom':
-                    this._axis = d3.axisBottom(_scale);
-                    break;
-                default:
-                    console.warn((this.id ? this.is + '#' + this.id : this.is), 'orientation value is invalid:', this.orientation);
-                    return;
-            }
-
-            //            this._onRender();
         },
 
-        _observeText: function(title, unit) {
-            if (title && unit) {
-                console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe textual attributes', title, unit);
-                this._onRender();
+        _observeText: function(label, unit) {
+            if (label && unit) {
+                console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe textual attributes', label, unit);
+                this._title = label + ' (' + unit + ')';
             }
         }
     };
