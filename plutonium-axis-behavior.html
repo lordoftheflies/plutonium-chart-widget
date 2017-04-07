@@ -53,6 +53,7 @@
              */
             center: {
                 type: Number,
+                notify: true,
                 value: 0.0
             },
             /**
@@ -61,8 +62,29 @@
              */
             span: {
                 type: Number,
+                notify: true,
                 value: 1.0
             },
+
+            /**
+             * Center of the axis.
+             * @type {number}
+             */
+            minimum: {
+                type: Number,
+                notify: true,
+                value: 0.0
+            },
+            /**
+             * Span of the viewed window.
+             * @type {number}
+             */
+            maximum: {
+                type: Number,
+                notify: true,
+                value: 1.0
+            },
+
             /**
              * String pattern for format time based axises.
              * Default is ISO 8601
@@ -169,6 +191,7 @@
 
                 this._ranges.domain([(this.center - this.span / 2), (this.center + this.span / 2)]);
 
+
                 var transformationAttribute;
                 var transformationAttributeForLabel;
                 var labelFontSize = this.parentNode._margin[this.orientation] / 3;
@@ -177,21 +200,25 @@
                         this._axis = d3.axisLeft(this._ranges);
                         transformationAttribute = 'translate(0,0)';
                         transformationAttributeForLabel = 'translate(' + (-this.parentNode._margin.left * 0.75) + ' ,' + (this.parentNode._height / 2) + ') ' + 'rotate(-90)';
+                        this._axis.ticks(this.parentNode._height / (2 * labelFontSize));
                         break;
                     case 'right':
                         this._axis = d3.axisRight(this._ranges);
                         transformationAttribute = 'translate(' + this.parentNode._width + ', 0)';
                         transformationAttributeForLabel = 'translate(' + (this.parentNode._width + this.parentNode._margin.right * 0.75) + ', ' + (this.parentNode._height / 2) + ')' + ' rotate(90)';
+                        this._axis.ticks(this.parentNode._height / (2 * labelFontSize));
                         break;
                     case 'top':
                         this._axis = d3.axisTop(this._ranges);
                         transformationAttribute = 'translate(0,0)';
                         transformationAttributeForLabel = 'translate(' + (this.parentNode._width / 2) + ',' + (-this.parentNode._margin.top * 0.75) + ')';
+                        this._axis.ticks(this.parentNode._width / (2 * labelFontSize));
                         break;
                     case 'bottom':
                         this._axis = d3.axisBottom(this._ranges);
                         transformationAttribute = "translate(0," + this.parentNode._height + ')';
                         transformationAttributeForLabel = "translate(" + (this.parentNode._width / 2) + " ," + (this.parentNode._height + this.parentNode._margin.bottom) + ")";
+                        this._axis.ticks(this.parentNode._width / (2 * labelFontSize));
                         break;
                     default:
                         console.warn((this.id ? this.is + '#' + this.id : this.is), 'orientation value is invalid:', this.orientation);
