@@ -224,7 +224,9 @@ Visualization widget.
                     if (self._height > self._data.length) {
                         self._data.push(img);
                     } else {
-                        self._data.shift();
+                        for (var i = 0; i < img.height; i++) {
+                            self._data.shift();
+                        }
                         self._data.push(img);
 
                     }
