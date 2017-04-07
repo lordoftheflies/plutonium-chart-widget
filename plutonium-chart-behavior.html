@@ -73,8 +73,6 @@
                 };
                 console.log((this.id ? this.is + '#' + this.id : this.is), 'resized to', this._viewport);
             }
-
-            this.draw();
         },
         _observeLayout: function(viewport, margin) {
             console.debug((this.id ? this.is + '#' + this.id : this.is), 'observe-layout', viewport, margin);
@@ -101,6 +99,21 @@
         },
         _onRender: function(chart, x, y) {
             this.draw();
+
+            console.debug((this.id ? this.is + '#' + this.id : this.is), 'render scales');
+            var distributedScales = this.queryAllEffectiveChildren('.scale');
+            for (var index in distributedScales) {
+                console.debug('- ', (distributedScales[index].id ? distributedScales[index].is + '#' + distributedScales[index].id : distributedScales[index].is));
+                /*distributedScales[index].fire('d3-update', {
+                    graphics: this._g,
+                    container: this._svg,
+                    width: this._width,
+                    height: this._height,
+                    margin: this._margin
+                });*/
+                distributedScales[index]._onRender();
+            }
+
 
             this.loading = false;
         },
