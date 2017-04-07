@@ -30,16 +30,19 @@
             },
             _width: {
                 type: Number,
-                notify: true
+                notify: true,
+                reflectToAttribute: true
             },
             _height: {
                 type: Number,
-                notify: true
+                notify: true,
+                reflectToAttribute: true
             },
             loading: {
                 type: Boolean,
                 notify: true,
-                value: false
+                value: false,
+                reflectToAttribute: true
             }
         },
         observers: [
